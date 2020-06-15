@@ -7,7 +7,10 @@ class Director(models.Model):
     last_name = models.CharField(max_length=100)
     biography = models.TextField(null=True, blank=True)
     born_date = models.DateField(null=True, blank=True)
-    image = models.ImageField(null=True, blank=True)
+    image = models.ImageField(null=True, blank=True, upload_to='directors')
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
 
 
 class Actor(models.Model):
@@ -16,7 +19,10 @@ class Actor(models.Model):
     biography = models.TextField(null=True, blank=True)
     born_date = models.DateField(null=True, blank=True)
     born_place = models.CharField(max_length=255, null=True, blank=True)
-    image = models.ImageField(null=True, blank=True)
+    image = models.ImageField(null=True, blank=True, upload_to='actors')
+
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
 
 
 class Movie(models.Model):
@@ -26,7 +32,7 @@ class Movie(models.Model):
     genre = models.CharField(max_length=1000)
     duration_min = models.IntegerField()
     description = models.TextField(null=True, blank=True)
-    image = models.ImageField(null=True, blank=True)
+    image = models.ImageField(null=True, blank=True, upload_to='movies')
     premiere = models.DateField(null=True, blank=True)
     director = models.ForeignKey(Director, on_delete=models.CASCADE)
     actors = models.ManyToManyField(Actor)
@@ -36,4 +42,5 @@ class Movie(models.Model):
     rating_kp = models.DecimalField(null=True, blank=True, decimal_places=3, max_digits=5)
     link_kp = models.CharField(max_length=1000, null=True, blank=True)
 
-
+    def __str__(self):
+        return f"{self.title}"
