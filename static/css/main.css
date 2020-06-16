@@ -1,3 +1,7 @@
+body {
+    background-color: #000000;
+}
+
 .date {
     font-size: 1em;
     font-style: italic;

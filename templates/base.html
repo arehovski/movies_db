@@ -9,6 +9,34 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
 </head>
 <body>
+<div class="container">
+    <div class="row mt-3 mb-3 header" style="background-color: gray">
+        {% block header %}
+            <div class="col-3 m-2 pt-3 pb-3" style="background-color: goldenrod">
+                <a href="{% url 'home_page' %}">MOVIES DATABASE</a>
+            </div>
+            <div class="col-6 search">
+                <form method="get">
+                    {% csrf_token %}
 
+                </form>
+            </div>
+            <div class="col-3 login" style="background-color: #0c5460">
+
+            </div>
+        {% endblock %}
+    </div>
+    <div class="row">
+        <div class="col-3 menu-bar">
+            {% for movie in movies %}
+                {% for genre in movie.genre.all %}
+                    {{ genre.get_genre_display }}
+                {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script src="{% static "js/bootstrap.min.js" %}"></script>
 </body>
 </html>
