@@ -2,23 +2,26 @@ from django.db import models
 
 
 # Create your models here.
-class Director(models.Model):
+
+class Person(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     biography = models.TextField(null=True, blank=True)
     born_date = models.DateField(null=True, blank=True)
+    born_place = models.CharField(max_length=255, null=True, blank=True)
+
+    class Meta:
+        abstract = True
+
+
+class Director(Person):
     image = models.ImageField(null=True, blank=True, upload_to='directors')
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
 
-class Actor(models.Model):
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    biography = models.TextField(null=True, blank=True)
-    born_date = models.DateField(null=True, blank=True)
-    born_place = models.CharField(max_length=255, null=True, blank=True)
+class Actor(Person):
     image = models.ImageField(null=True, blank=True, upload_to='actors')
 
     def __str__(self):
@@ -27,12 +30,13 @@ class Actor(models.Model):
 
 class Genre(models.Model):
     genres = [
-        ("ан", "аниме"), ("би", "биография"), ("бо", "боевик"), ("ве", "вестерн"), ("во", "военный"),
-        ("дт", "детектив"), ("де", "десткий"), ("дв", "для взрослых"), ("дк", "документальный"), ("др", "драма"),
-        ("иг", "игра"), ("ис", "история"), ("ко", "комедия"), ("кн", "концерт"), ("км", "криминал"), ("мл", "мелодрама"),
-        ("му", "музыка"), ("мф", "мультфильм"), ("мю", "мюзикл"), ("нв", "новости"), ("пр", "приключения"),
-        ("тв", "реальное тв"), ("см", "семейный"), ("сп", "спорт"), ("тш", "ток-шоу"), ("тр", "триллер"),
-        ("уж", "ужасы"), ("фн", "фантастика"), ("фэ", "фентези"), ("цр", "церемония")
+        ("аниме", "аниме"), ("биография", "биография"), ("боевик", "боевик"), ("вестерн", "вестерн"), ("военный", "военный"),
+        ("детектив", "детектив"), ("десткий", "десткий"), ("для взрослых", "для взрослых"), ("документальный", "документальный"),
+        ("драма", "драма"), ("игра", "игра"), ("история", "история"), ("комедия", "комедия"), ("концерт", "концерт"),
+        ("криминал", "криминал"), ("мелодрама", "мелодрама"), ("музыка", "музыка"), ("мультфильм", "мультфильм"),
+        ("мюзикл", "мюзикл"), ("новости", "новости"), ("приключения", "приключения"),
+        ("реальное тв", "реальное тв"), ("семейный", "семейный"), ("спорт", "спорт"), ("ток-шоу", "ток-шоу"), ("триллер", "триллер"),
+        ("ужасы", "ужасы"), ("фантастика", "фантастика"), ("фентези", "фентези"), ("церемония", "церемония")
     ]
     genre = models.CharField(max_length=50, choices=genres)
 
