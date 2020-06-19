@@ -1,7 +1,9 @@
 asgiref==3.2.7
 attrs==19.3.0
 Automat==20.2.0
+certifi==2020.4.5.2
 cffi==1.14.0
+chardet==3.0.4
 constantly==15.1.0
 cryptography==2.9.2
 cssselect==1.1.0
@@ -22,11 +24,13 @@ PyHamcrest==2.0.2
 pyOpenSSL==19.1.0
 pytz==2020.1
 queuelib==1.5.0
+requests==2.24.0
 Scrapy==2.1.0
 scrapy-djangoitem==1.1.1
 service-identity==18.1.0
 six==1.15.0
 sqlparse==0.3.1
 Twisted==20.3.0
+urllib3==1.25.9
 w3lib==1.22.0
 zope.interface==5.1.0
