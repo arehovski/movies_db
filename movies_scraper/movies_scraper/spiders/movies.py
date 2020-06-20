@@ -53,44 +53,17 @@ class MoviesSpider(scrapy.Spider):
     def parse_director(self, response):
         movie = response.meta['movie']
         actors = response.meta['actors']
-        first_name = response.xpath("//h1[@class='moviename-big']/text()").get().split()[0]
-        last_name = " ".join(response.xpath("//h1[@class='moviename-big']/text()").get().split()[1:])
-        born_date = " ".join(response.xpath("(//td[@class='birth'])[1]/a/text()").getall())
-        born_place = " ".join(response.xpath("(//td[@class='birth'])[2]/span/a/text()").getall())
-        image = response.xpath("//img[@itemprop='image']/@src").get()
-        director = {
-            'first_name': first_name,
-            'last_name': last_name,
-            'born_date': born_date,
-            'born_place': born_place,
-            'image': image
-        }
+        director = self._get_person_data(response)
         actors_list = []
-        i = 1
         yield scrapy.Request(response.urljoin(actors.xpath(".//@href").get()), callback=self.parse_actor,
-                         meta={'movie': movie, 'director': director, "actors": actors, 'i': i, 'actors_list': actors_list})
-
+                         meta={'movie': movie, 'director': director, "actors": actors, 'actors_list': actors_list})
 
     def parse_actor(self, response):
-        i = response.meta['i']
         movie = response.meta['movie']
         actors = response.meta['actors']
         director = response.meta['director']
         actors_list = response.meta['actors_list']
-        first_name = response.xpath("//h1[@class='moviename-big']/text()").get().split()[0]
-        last_name = " ".join(response.xpath("//h1[@class='moviename-big']/text()").get().split()[1:])
-        born_date = " ".join(response.xpath("(//td[@class='birth'])[1]/a/text()").getall())
-        born_place = " ".join(response.xpath("(//td[@class='birth'])[2]/span/a/text()").getall())
-        image = response.xpath("//img[@itemprop='image']/@src").get()
-        actor = {
-            f'actor_{i}': {
-                'first_name': first_name,
-                'last_name': last_name,
-                'born_date': born_date,
-                'born_place': born_place,
-                'image': image
-            }
-        }
+        actor = self._get_person_data(response)
         actors_list.append(actor)
         actors.pop(0)
         if not actors:
@@ -99,6 +72,19 @@ class MoviesSpider(scrapy.Spider):
                 "director": director,
                 "actors": actors_list
             }
-        i += 1
         yield scrapy.Request(response.urljoin(actors.xpath(".//@href").get()), callback=self.parse_actor,
-                             meta={'movie': movie, 'director': director, "actors": actors, 'i': i, 'actors_list': actors_list})
+                             meta={'movie': movie, 'director': director, "actors": actors, 'actors_list': actors_list})
+
+    def _get_person_data(self, response):
+        first_name = response.xpath("//h1[@class='moviename-big']/text()").get().split()[0]
+        last_name = " ".join(response.xpath("//h1[@class='moviename-big']/text()").get().split()[1:])
+        born_date = " ".join(response.xpath("(//td[@class='birth'])[1]/a/text()").getall())
+        born_place = " ".join(response.xpath("(//td[@class='birth'])[2]/span/a/text()").getall())
+        image = response.xpath("//img[@itemprop='image']/@src").get()
+        return {
+            'first_name': first_name,
+            'last_name': last_name,
+            'born_date': born_date,
+            'born_place': born_place,
+            'image': image
+        }
