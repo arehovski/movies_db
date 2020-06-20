@@ -1,21 +1,31 @@
 # -*- coding: utf-8 -*-
 import scrapy
+from urllib.parse import urlencode
 
 
 class MoviesSpider(scrapy.Spider):
     name = 'movies'
-    allowed_domains = ['www.kinopoisk.ru']
-
-    # start_urls = ['https://www.kinopoisk.ru/lists/top250/']
+    access_key = "2105f22f98d48cf26c40ce23db1ec3bf"
+    first_url = 'https://www.kinopoisk.ru/lists/top250/'
+    params = {
+        'access_key': access_key,
+        'url': first_url
+    }
+    scrapestack = 'http://api.scrapestack.com/scrape'
+    domain_to_scrape = "https://www.kinopoisk.ru"
 
     def start_requests(self):
-        yield scrapy.Request('https://www.kinopoisk.ru/lists/top250/',
+        yield scrapy.Request(f'http://api.scrapestack.com/scrape?{urlencode(self.params)}',
                              callback=self.parse)
 
     def parse(self, response):
         item_link = response.xpath("//a[@class='selection-film-item-meta__link']/@href").get()
-        abs_link = response.urljoin(item_link)
-        yield scrapy.Request(abs_link, self.parse_movie)
+        abs_link = self.domain_to_scrape + item_link
+        params = {
+            'access_key': self.access_key,
+            'url': abs_link
+        }
+        yield scrapy.Request(f"{self.scrapestack}?{urlencode(params)}", self.parse_movie)
 
     def parse_movie(self, response):
         genres = response.xpath("//span[@itemprop='genre']/a")
@@ -24,7 +34,10 @@ class MoviesSpider(scrapy.Spider):
             genre.append(g.xpath(".//text()").get())
         title = response.xpath("//span[@class='moviename-title-wrapper']/text()").get()
         year = int(response.xpath("(//td/div/a)[1]/text()").get())
-        country = response.xpath("(//td/div/a)[2]/text()").get()
+        countries = response.xpath("(//td/div)[2]/a")
+        country = []
+        for c in countries:
+            country.append(c.xpath(".//text").get())
         duration_min = int(response.xpath("//td[@id='runtime']/text()").get().split()[0])
         description = response.xpath("//div[@class='brand_words film-synopsys']/text()").get()
         image = response.xpath(
@@ -56,7 +69,7 @@ class MoviesSpider(scrapy.Spider):
         director = self._get_person_data(response)
         actors_list = []
         yield scrapy.Request(response.urljoin(actors.xpath(".//@href").get()), callback=self.parse_actor,
-                         meta={'movie': movie, 'director': director, "actors": actors, 'actors_list': actors_list})
+                             meta={'movie': movie, 'director': director, "actors": actors, 'actors_list': actors_list})
 
     def parse_actor(self, response):
         movie = response.meta['movie']
