@@ -38,16 +38,20 @@ class Genre(models.Model):
         ("реальное тв", "реальное тв"), ("семейный", "семейный"), ("спорт", "спорт"), ("ток-шоу", "ток-шоу"), ("триллер", "триллер"),
         ("ужасы", "ужасы"), ("фантастика", "фантастика"), ("фентези", "фентези"), ("церемония", "церемония")
     ]
-    genre = models.CharField(max_length=50, choices=genres)
+    genre = models.CharField(max_length=100, choices=genres)
 
     def __str__(self):
         return f"{self.genre}"
 
 
+class Country(models.Model):
+    country = models.CharField(max_length=100)
+
+
 class Movie(models.Model):
     title = models.CharField(max_length=255)
     year = models.IntegerField()
-    country = models.CharField(max_length=255)
+    country = models.ManyToManyField(Country)
     genre = models.ManyToManyField(Genre)
     duration_min = models.IntegerField()
     description = models.TextField(null=True, blank=True)
