@@ -33,6 +33,9 @@
                     {{ genre.get_genre_display }}
                 {% endfor %}
             {% endfor %}
+        {% for director in directors %}
+            <img src="{{ director.image.url }}" alt="director">
+        {% endfor %}
         </div>
     </div>
 </div>
