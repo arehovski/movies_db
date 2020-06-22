@@ -51,7 +51,8 @@ DEFAULT_REQUEST_HEADERS = {
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
     'accept-language': "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7",
     'cache-control': "max-age=0",
-    'user-agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) snap Chromium/83.0.4103.106 Chrome/83.0.4103.106 Safari/537.36"
+    'user-agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) snap Chromium/83.0.4103.106 Chrome/83.0.4103.106 Safari/537.36",
+    "X-API-KEY": "ec9c7951-9aef-4e2a-a22a-461aee00ff6b"
 }
 
 # Enable or disable spider middlewares
