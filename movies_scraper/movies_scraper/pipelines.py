@@ -130,6 +130,6 @@ class MoviesScraperPipeline:
             movie.country.add(*countries)
             movie.actors.add(*actors)
         else:
-            logging.warning(f"The movie {movie.get('title')} is already exists")
+            logging.warning(f"The movie {movie.title} is already exists")
         return item
 
