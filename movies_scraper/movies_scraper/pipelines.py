@@ -48,8 +48,7 @@ class MoviesScraperPipeline:
         except Director.DoesNotExist:
             image = requests.get(director_item.get("image"))
             rel_db_path = f'directors/{director_item.get("first_name")}_{director_item.get("last_name")}.jpg'
-            image_path = os.path.join(
-                BASE_DIR, f'media/{rel_db_path}')
+            image_path = os.path.join(BASE_DIR, f'media/{rel_db_path}')
             with open(image_path, "wb") as img:
                 img.write(image.content)
             director = Director.objects.create(
@@ -70,8 +69,7 @@ class MoviesScraperPipeline:
             except Actor.DoesNotExist:
                 image = requests.get(actor_item.get("image"))
                 rel_db_path = f'actors/{actor_item.get("first_name")}_{actor_item.get("last_name")}.jpg'
-                image_path = os.path.join(
-                    BASE_DIR, f'media/{rel_db_path}')
+                image_path = os.path.join(BASE_DIR, f'media/{rel_db_path}')
                 with open(image_path, "wb") as img:
                     img.write(image.content)
                 actor = Actor.objects.create(
@@ -84,22 +82,22 @@ class MoviesScraperPipeline:
                 actor.save()
             actors.append(actor)
 
-        genre_items = item.get("genre")
+        genre_items = item.get("movie").get("genre")
         genres = []
         for genre_item in genre_items:
             try:
-                genre = Genre.objects.get(genre_item)
+                genre = Genre.objects.get(genre=genre_item)
             except Genre.DoesNotExist:
                 genre = Genre.objects.create(
                     genre=genre_item
                 )
             genres.append(genre)
 
-        country_items = item.get("country")
+        country_items = item.get("movie").get("country")
         countries = []
         for country_item in country_items:
             try:
-                country = Country.objects.get(country_item)
+                country = Country.objects.get(country=country_item)
             except Country.DoesNotExist:
                 country = Country.objects.create(
                     country=country_item
@@ -112,8 +110,7 @@ class MoviesScraperPipeline:
         except Movie.DoesNotExist:
             image = requests.get(movie_item.get("image"))
             rel_database_path = f"movies/{movie_item.get('title')}.jpg"
-            image_path = os.path.join(
-                BASE_DIR, f'media/{rel_database_path}')
+            image_path = os.path.join(BASE_DIR, f'media/{rel_database_path}')
             with open(image_path, "wb") as img:
                 img.write(image.content)
             movie = Movie.objects.create(
