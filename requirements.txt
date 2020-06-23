@@ -25,6 +25,7 @@ pyOpenSSL==19.1.0
 pytz==2020.1
 queuelib==1.5.0
 requests==2.24.0
+scraperapi-sdk==0.2.2
 Scrapy==2.1.0
 scrapy-djangoitem==1.1.1
 service-identity==18.1.0
