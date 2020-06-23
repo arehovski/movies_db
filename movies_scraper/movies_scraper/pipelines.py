@@ -7,36 +7,10 @@
 
 from movies.models import Director, Actor, Genre, Country, Movie
 import requests
-from datetime import date
+from datetime import date, datetime
 from movies_db.settings import BASE_DIR
 import os
 import logging
-
-
-def format_date(date_str):
-    date_str = date_str.split()
-    months = [
-        (1, "января"),
-        (2, "февраля"),
-        (3, "марта"),
-        (4, "апреля"),
-        (5, "мая"),
-        (6, "июня"),
-        (7, "июля"),
-        (8, "августа"),
-        (9, "сентября"),
-        (10, "октября"),
-        (11, "ноября"),
-        (12, "декабря"),
-    ]
-    for month in months:
-        if date_str[1] == month[1]:
-            date_str[1] = date_str[1].replace(date_str[1], str(month[0]))
-    try:
-        form_date = date(int(date_str[2]), int(date_str[1]), int(date_str[0]))
-    except TypeError:
-        form_date = date(2000, 1, 1)
-    return form_date
 
 
 class MoviesScraperPipeline:
@@ -54,9 +28,11 @@ class MoviesScraperPipeline:
             director = Director.objects.create(
                 first_name=director_item.get("first_name"),
                 last_name=director_item.get("last_name"),
-                born_date=format_date(director_item.get("born_date")),
+                name_en=director_item.get("name_en"),
+                born_date=self.get_data_from_string(director_item.get("born_date")),
                 born_place=director_item.get("born_place"),
-                image=rel_db_path
+                image=rel_db_path,
+                link=director_item.get("link")
             )
             director.save()
 
@@ -75,9 +51,11 @@ class MoviesScraperPipeline:
                 actor = Actor.objects.create(
                     first_name=actor_item.get("first_name"),
                     last_name=actor_item.get("last_name"),
-                    born_date=format_date(actor_item.get("born_date")),
+                    name_en=actor_item.get("name_en"),
+                    born_date=self.get_data_from_string(actor_item.get("born_date")),
                     born_place=actor_item.get("born_place"),
-                    image=rel_db_path
+                    image=rel_db_path,
+                    link=actor_item.get("link")
                 )
                 actor.save()
             actors.append(actor)
@@ -115,12 +93,14 @@ class MoviesScraperPipeline:
                 img.write(image.content)
             movie = Movie.objects.create(
                 title=movie_item.get("title"),
+                title_en=movie_item.get("title_en"),
                 year=movie_item.get("year"),
-                duration_min=movie_item.get("duration_min"),
+                duration_min=self.format_duration(movie_item.get("duration_min")),
                 description=movie_item.get("description"),
                 image=rel_database_path,
-                premiere=format_date(movie_item.get("premiere")),
+                premiere=self.get_data_from_string(movie_item.get("premiere")),
                 is_tv_series=movie_item.get("is_tv_series"),
+                rating_imdb=movie_item.get("rating_imdb"),
                 rating_kp=movie_item.get("rating_kp"),
                 link_kp=movie_item.get("link_kp"),
                 director=director,
@@ -133,3 +113,15 @@ class MoviesScraperPipeline:
             logging.warning(f"The movie {movie.title} is already exists")
         return item
 
+    @staticmethod
+    def get_data_from_string(date_string):
+        if date_string:
+            return datetime.strptime(date_string, "%Y-%m-%d").date()
+
+    @staticmethod
+    def format_duration(time):
+        if time:
+            time = time.split(":")
+            return (int(time[0]) * 60) + int(time[1])
+        else:
+            return 0
