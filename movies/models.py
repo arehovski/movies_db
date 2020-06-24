@@ -39,6 +39,9 @@ class Genre(models.Model):
 class Country(models.Model):
     country = models.CharField(max_length=100)
 
+    def __str__(self):
+        return f"{self.country}"
+
 
 class Movie(models.Model):
     title = models.CharField(max_length=255)
@@ -56,6 +59,9 @@ class Movie(models.Model):
     rating_imdb = models.DecimalField(null=True, blank=True, decimal_places=3, max_digits=5)
     rating_kp = models.DecimalField(null=True, blank=True, decimal_places=3, max_digits=5)
     link_kp = models.CharField(max_length=1000, null=True, blank=True)
+
+    class Meta:
+        ordering = ["-rating_kp"]
 
     def __str__(self):
         return f"{self.title}"
