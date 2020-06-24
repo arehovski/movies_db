@@ -26,16 +26,91 @@
             </div>
         {% endblock %}
     </div>
-    <div class="row">
-        <div class="col-3 menu-bar">
+    <div class="row mb-2 mt-2 rounded">
+        <div class="col-3 nav-bar" style="background-color: #adadad">
+            <span>Панель навигации</span>
+            <hr/>
+            <div class="row">
+                <div class="col-6 genre">
+                    <p>По жанрам</p>
+                    {% for genre in genres %}
+                        <a href=""><span>{{ genre.genre }}</span></a>
+                        <span class="text-left">({{ genre.movie_set.count }})</span>
+                        <br/>
+                    {% endfor %}
+                </div>
+                <div class="col-6 year-country">
+                    <p>По году</p>
+                    <hr/>
+                    {% for year in years %}
+                        <a href=""><span>{{ year.year }}</span></a>
+                        <span>({{ year.total }})</span>
+                        <br/>
+                    {% endfor %}
+                    <hr/>
+                    <p>По странам</p>
+                    {% for country in countries %}
+                        <a href=""><span>{{ country.country }}</span></a>
+                        <span>({{ country.movie_set.count }})</span>
+                        <br/>
+                    {% endfor %}
+                </div>
+            </div>
+            <hr/>
+        </div>
+        <div class="col-9 movie-list" style="background-color: #3d4d5e">
+            <hr/>
             {% for movie in movies %}
-                {% for genre in movie.genre.all %}
-                    {{ genre.get_genre_display }}
-                {% endfor %}
+                <div class="row">
+                    <div class="col-3">
+                        <img class="movie-list-poster img-fluid rounded" height="180" width="120"
+                             src="{{ movie.image.url }}" alt="movie-poster">
+                    </div>
+                    <div class="col-9">
+                        <div>{{ movie.title }}</div>
+                        {% if movie.title_en %}
+                            <div>{{ movie.title_en }}</div>
+                        {% endif %}
+                        <div>
+                            <span class="movie-genres" >
+                                {% for genre in movie.genre.all %}
+                                    {{ genre }}{% if not forloop.last %},{% endif %}
+                                {% endfor %}
+                            </span>
+                            <span class="movie-countries">
+                                {% for country in movie.country.all %}
+                                    {{ country }}{% if not forloop.last %},{% endif %}
+                                {% endfor %}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <hr/>
             {% endfor %}
-        {% for director in directors %}
-            <img src="{{ director.image.url }}" alt="director">
-        {% endfor %}
+
+            {% block pagination %}
+                {% if movies %}
+                    <div class="row">
+                        <div class="col-4">
+                            {% if movies.has_previous %}
+                                <a href="?page={{ movies.previous_page_number }}">&laquo; previous</a>
+                            {% endif %}
+                        </div>
+                        <div class="col-4 text-center">
+                            {% for i in movies.paginator.page_range %}
+                                {% ifequal i movies.number %}
+                                    <a href="?page={{ i }}">{{ i }}</a>
+                                {% endifequal %}
+                            {% endfor %}
+                        </div>
+                        <div class="col-4 text-right">
+                            {% if movies.has_next %}
+                                <a href="?page={{ movies.next_page_number }}">next &raquo;</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endblock %}
         </div>
     </div>
 </div>

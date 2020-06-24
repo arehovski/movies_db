@@ -15,7 +15,7 @@ class MoviesApiSpider(scrapy.Spider):
         return f"https://kinopoiskapiunofficial.tech/api/v2.1/films/{film_id}?append_to_response=RATING"
 
     def start_requests(self):
-        for movie_id in movie_ids[:150]:
+        for movie_id in movie_ids:
             yield scrapy.Request(self._get_movie_url(movie_id), callback=self.parse, meta={'movie_id': movie_id})
 
     def parse(self, response):
