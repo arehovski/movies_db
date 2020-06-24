@@ -1,4 +1,5 @@
 {% load static %}
+{% load navigation_bar %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -27,37 +28,7 @@
         {% endblock %}
     </div>
     <div class="row mb-2 mt-2 rounded">
-        <div class="col-3 nav-bar" style="background-color: #adadad">
-            <span>Панель навигации</span>
-            <hr/>
-            <div class="row">
-                <div class="col-6 genre">
-                    <p>По жанрам</p>
-                    {% for genre in genres %}
-                        <a href=""><span>{{ genre.genre }}</span></a>
-                        <span class="text-left">({{ genre.movie_set.count }})</span>
-                        <br/>
-                    {% endfor %}
-                </div>
-                <div class="col-6 year-country">
-                    <p>По году</p>
-                    <hr/>
-                    {% for year in years %}
-                        <a href=""><span>{{ year.year }}</span></a>
-                        <span>({{ year.total }})</span>
-                        <br/>
-                    {% endfor %}
-                    <hr/>
-                    <p>По странам</p>
-                    {% for country in countries %}
-                        <a href=""><span>{{ country.country }}</span></a>
-                        <span>({{ country.movie_set.count }})</span>
-                        <br/>
-                    {% endfor %}
-                </div>
-            </div>
-            <hr/>
-        </div>
+        {% navigation_bar %}
         <div class="col-9 movie-list" style="background-color: #3d4d5e">
             <hr/>
             {% for movie in movies %}
@@ -66,23 +37,32 @@
                         <img class="movie-list-poster img-fluid rounded" height="180" width="120"
                              src="{{ movie.image.url }}" alt="movie-poster">
                     </div>
-                    <div class="col-9">
+                    <div class="col-7">
                         <div>{{ movie.title }}</div>
                         {% if movie.title_en %}
                             <div>{{ movie.title_en }}</div>
                         {% endif %}
                         <div>
+                            <p><a href="{% url 'year_view' year=movie.year %}">{{ movie.year }}</a></p>
                             <span class="movie-genres" >
                                 {% for genre in movie.genre.all %}
-                                    {{ genre }}{% if not forloop.last %},{% endif %}
+                                    <a href="{% url 'genre_view' genre=genre %}">{{ genre }}</a>{% if not forloop.last %},{% endif %}
                                 {% endfor %}
                             </span>
-                            <span class="movie-countries">
+
+                            <span class="movie-countries pl-1">
                                 {% for country in movie.country.all %}
-                                    {{ country }}{% if not forloop.last %},{% endif %}
+                                     <a href="{% url 'country_view' country=country %}">{{ country }}</a>{% if not forloop.last %},{% endif %}
                                 {% endfor %}
                             </span>
+
                         </div>
+                    </div>
+                    <div class="col-2 rating">
+                        <p>Рейтинг кинопоиска {{ movie.rating_kp }}</p>
+                        {% if movie.rating_imdb %}
+                            <p>Рейтинг IMDB {{ movie.rating_imdb }}</p>
+                        {% endif %}
                     </div>
                 </div>
                 <hr/>
