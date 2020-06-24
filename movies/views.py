@@ -1,8 +1,19 @@
 from django.shortcuts import render
 from django import views
 from .models import Actor, Director, Movie, Genre, Country
-from django.db.models import Count
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+
+def pagination(iterable, request):
+    paginator = Paginator(iterable, 10)
+    page = request.GET.get('page')
+    try:
+        iterable = paginator.page(page)
+    except PageNotAnInteger:
+        iterable = paginator.page(1)
+    except EmptyPage:
+        iterable = paginator.page(paginator.num_pages)
+    return iterable
 
 
 # Create your views here.
@@ -11,21 +22,31 @@ class HomePage(views.View):
     template = "base.html"
 
     def get(self, request):
-        genres = Genre.objects.all().annotate(total=Count("movie")).order_by('-total')
-        countries = Country.objects.all().annotate(total=Count('movie')).order_by('-total')[:8]
-        years = Movie.objects.all().values('year').annotate(total=Count('year')).order_by('-total')[:10]
-        paginator = Paginator(self.movies, 10)
-        page = request.GET.get('page')
-        try:
-            self.movies = paginator.page(page)
-        except PageNotAnInteger:
-            self.movies = paginator.page(1)
-        except EmptyPage:
-            self.movies = paginator.page(paginator.num_pages)
+        self.movies = pagination(self.movies, request)
         context = {
             'movies': self.movies,
-            'genres': genres,
-            'years': years,
-            'countries': countries
         }
         return render(request, self.template, context)
+
+
+class GenreView(views.View):
+    template = "base.html"
+
+    def get(self, request, genre):
+        movies = Movie.objects.filter(genre__genre=f"{genre}")
+        movies = pagination(movies, request)
+        return render(request, self.template, context={'movies': movies})
+
+
+class YearView(views.View):
+    def get(self, request, year):
+        movies = Movie.objects.filter(year=int(f"{year}"))
+        movies = pagination(movies, request)
+        return render(request, "base.html", context={'movies': movies})
+
+
+class CountryView(views.View):
+    def get(self, request, country):
+        movies = Movie.objects.filter(country__country__exact=f"{country}")
+        movies = pagination(movies, request)
+        return render(request, "base.html", context={'movies': movies})

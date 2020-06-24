@@ -1,0 +1,31 @@
+<div class="col-3 nav-bar rounded-left" style="background-color: #adadad">
+    <span>Панель навигации</span>
+    <hr/>
+    <div class="row">
+        <div class="col-6 genre">
+            <p>По жанрам</p>
+            {% for genre in genres %}
+                <a href="{% url 'genre_view' genre=genre%}"><span>{{ genre.genre }}</span></a>
+                <span class="text-left">({{ genre.movie_set.count }})</span>
+                <br/>
+            {% endfor %}
+        </div>
+        <div class="col-6 year-country">
+            <p>По году</p>
+            <hr/>
+            {% for year in years %}
+                <a href="{% url 'year_view' year=year.year %}"><span>{{ year.year }}</span></a>
+                <span>({{ year.total }})</span>
+                <br/>
+            {% endfor %}
+            <hr/>
+            <p>По странам</p>
+            {% for country in countries %}
+                <a href="{% url 'country_view' country=country %}"><span>{{ country }}</span></a>
+                <span>({{ country.movie_set.count }})</span>
+                <br/>
+            {% endfor %}
+        </div>
+    </div>
+    <hr/>
+</div>
