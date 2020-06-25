@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django import views
 from .models import Actor, Director, Movie, Genre, Country
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.shortcuts import get_object_or_404
 
 
 def pagination(iterable, request):
@@ -50,3 +51,11 @@ class CountryView(views.View):
         movies = Movie.objects.filter(country__country__exact=f"{country}")
         movies = pagination(movies, request)
         return render(request, "base.html", context={'movies': movies})
+
+
+class MovieView(views.View):
+    template = 'movie.html'
+
+    def get(self, request, pk):
+        movie = get_object_or_404(Movie, pk=pk)
+        return render(request, self.template, context={'movie': movie})
