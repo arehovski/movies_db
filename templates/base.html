@@ -29,7 +29,7 @@
     </div>
     <div class="row mb-2 mt-2 rounded">
         {% navigation_bar %}
-        <div class="col-9 movie-list" style="background-color: #3d4d5e">
+        <div class="col-9 rounded-right movie-list" style="background-color: #3d4d5e">
             <hr/>
             {% for movie in movies %}
                 <div class="row">
@@ -44,15 +44,17 @@
                         {% endif %}
                         <div>
                             <p><a href="{% url 'year_view' year=movie.year %}">{{ movie.year }}</a></p>
-                            <span class="movie-genres" >
+                            <span class="movie-genres">
                                 {% for genre in movie.genre.all %}
-                                    <a href="{% url 'genre_view' genre=genre %}">{{ genre }}</a>{% if not forloop.last %},{% endif %}
+                                    <a href="{% url 'genre_view' genre=genre %}">{{ genre }}</a>
+                                    {% if not forloop.last %},{% endif %}
                                 {% endfor %}
                             </span>
 
                             <span class="movie-countries pl-1">
                                 {% for country in movie.country.all %}
-                                     <a href="{% url 'country_view' country=country %}">{{ country }}</a>{% if not forloop.last %},{% endif %}
+                                    <a href="{% url 'country_view' country=country %}">{{ country }}</a>
+                                    {% if not forloop.last %},{% endif %}
                                 {% endfor %}
                             </span>
 
@@ -70,25 +72,25 @@
 
             {% block pagination %}
                 {% if movies %}
-                    <div class="row">
-                        <div class="col-4">
-                            {% if movies.has_previous %}
-                                <a href="?page={{ movies.previous_page_number }}">&laquo; previous</a>
-                            {% endif %}
-                        </div>
-                        <div class="col-4 text-center">
+                    <ul class="pagination">
+                        {% if movies.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ movies.previous_page_number }}">&laquo; previous</a>
+                            </li>
+                        {% endif %}
+                        <li class="page-item active">
                             {% for i in movies.paginator.page_range %}
                                 {% ifequal i movies.number %}
-                                    <a href="?page={{ i }}">{{ i }}</a>
+                                    <a class="page-link" href="?page={{ i }}">{{ i }}</a>
                                 {% endifequal %}
                             {% endfor %}
-                        </div>
-                        <div class="col-4 text-right">
-                            {% if movies.has_next %}
-                                <a href="?page={{ movies.next_page_number }}">next &raquo;</a>
-                            {% endif %}
-                        </div>
-                    </div>
+                        </li>
+                        {% if movies.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ movies.next_page_number }}">next &raquo;</a>
+                            </li>
+                        {% endif %}
+                    </ul>
                 {% endif %}
             {% endblock %}
         </div>
