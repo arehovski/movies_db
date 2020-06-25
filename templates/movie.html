@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="row mt-3 movie-info">
+        <div class="col-4 movie-poster">
+            <img class="img-fluid rounded" src="{{ movie.image.url }}" alt="movie-poster" height="360" width="240">
+        </div>
+        <div class="col-8">
+            <h2>
+                {{ movie.title }} {% if movie.is_tv_series %}(сериал){% endif %}
+            </h2>
+            {% if movie.title_en %}
+                <h4>{{ movie.title_en }}</h4>
+            {% endif %}
+            <table class="info">
+                <tbody>
+                <tr>
+                    <td>год</td>
+                    <td>
+                        <a href="{% url 'year_view' year=movie.year %}">{{ movie.year }}</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>страна</td>
+                    <td>
+                        {% for country in movie.country.all %}
+                            <a href="{% url 'country_view' country=country %}">{{ country }}</a>
+                            {% if not forloop.last %},{% endif %}
+                        {% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>жанр</td>
+                    <td>
+                        {% for genre in movie.genre.all %}
+                            <a href="{% url 'genre_view' genre=genre %}">{{ genre }}</a>
+                            {% if not forloop.last %},{% endif %}
+                        {% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>режиссер</td>
+                    <td>
+                        <a href="">{{ movie.director }}</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>в главных ролях</td>
+                    <td>
+                        {% for actor in movie.actors.all %}
+                            <a href="">{{ actor }}</a>
+                            {% if not forloop.last %},{% endif %}
+                        {% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>премьера</td>
+                    <td>{{ movie.premiere }}</td>
+                </tr>
+                <tr>
+                    <td>продолжительность</td>
+                    <td>{{ movie.duration_min }} мин.</td>
+                </tr>
+                <tr>
+                    <td>кинопоиск</td>
+                    <td><a href="{{ movie.link_kp }}">тыц</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row mt-2 ml-2 movie-desc">
+        <div>{{ movie.description }}</div>
+        <div>Рейтинг кинопоиска {{ movie.rating_kp }}</div>
+        <br>
+        <div>
+            {% if movie.rating_imdb %}
+                Рейтинг IMDB {{ movie.rating_imdb }}
+            {% endif %}
+        </div>
+    </div>
+{% endblock content %}
