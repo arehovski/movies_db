@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404
 
 
 def pagination(iterable, request):
-    paginator = Paginator(iterable, 10)
+    paginator = Paginator(iterable, 15)
     page = request.GET.get('page')
     try:
         iterable = paginator.page(page)
@@ -58,4 +58,9 @@ class MovieView(views.View):
 
     def get(self, request, pk):
         movie = get_object_or_404(Movie, pk=pk)
-        return render(request, self.template, context={'movie': movie})
+        similar_movies = Movie.objects.filter(genre__genre=movie.genre.all()[0]).exclude(pk=movie.pk)[:8]
+        context = {
+            'movie': movie,
+            'similar_movies': similar_movies
+        }
+        return render(request, self.template, context=context)

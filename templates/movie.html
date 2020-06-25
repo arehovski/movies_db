@@ -3,7 +3,7 @@
 {% block content %}
     <div class="row mt-3 movie-info">
         <div class="col-4 movie-poster">
-            <img class="img-fluid rounded" src="{{ movie.image.url }}" alt="movie-poster" height="360" width="240">
+            <img class="rounded" src="{{ movie.image.url }}" alt="movie-poster" height="360" width="240">
         </div>
         <div class="col-8">
             <h2>
@@ -24,8 +24,8 @@
                     <td>страна</td>
                     <td>
                         {% for country in movie.country.all %}
-                            <a href="{% url 'country_view' country=country %}">{{ country }}</a>
-                            {% if not forloop.last %},{% endif %}
+                            <a href="{% url 'country_view' country=country %}">
+                                {{ country }}{% if not forloop.last %},{% endif %}</a>
                         {% endfor %}
                     </td>
                 </tr>
@@ -33,8 +33,8 @@
                     <td>жанр</td>
                     <td>
                         {% for genre in movie.genre.all %}
-                            <a href="{% url 'genre_view' genre=genre %}">{{ genre }}</a>
-                            {% if not forloop.last %},{% endif %}
+                            <a href="{% url 'genre_view' genre=genre %}">
+                                {{ genre }}{% if not forloop.last %},{% endif %}</a>
                         {% endfor %}
                     </td>
                 </tr>
@@ -48,8 +48,7 @@
                     <td>в главных ролях</td>
                     <td>
                         {% for actor in movie.actors.all %}
-                            <a href="">{{ actor }}</a>
-                            {% if not forloop.last %},{% endif %}
+                            <a href="">{{ actor }}{% if not forloop.last %},{% endif %}</a>
                         {% endfor %}
                     </td>
                 </tr>
@@ -69,14 +68,24 @@
             </table>
         </div>
     </div>
-    <div class="row mt-2 ml-2 movie-desc">
-        <div>{{ movie.description }}</div>
-        <div>Рейтинг кинопоиска {{ movie.rating_kp }}</div>
-        <br>
-        <div>
-            {% if movie.rating_imdb %}
-                Рейтинг IMDB {{ movie.rating_imdb }}
-            {% endif %}
+    <div class="row mt-2 movie-desc">
+        <div class="col-12">
+            <div>{{ movie.description }}</div>
+            <div>Рейтинг кинопоиска <span class="badge badge-primary">{{ movie.rating_kp }}</span></div>
+            <div>
+                {% if movie.rating_imdb %}
+                    Рейтинг IMDB <span class="badge badge-primary">{{ movie.rating_imdb }}</span>
+                {% endif %}
+            </div>
         </div>
+        <div class="col-12">Если вам понравился этот фильм, не пропустите:</div>
+        {% for sim_movie in similar_movies %}
+            <div class="col-3">
+                <a href="{% url 'movie_view' pk=sim_movie.id %}">
+                    <img class=" rounded" src="{{ sim_movie.image.url }}" alt="movie-poster" height="150" width="100">
+                    <p>{{ sim_movie.title }}</p>
+                </a>
+            </div>
+        {% endfor %}
     </div>
 {% endblock content %}
