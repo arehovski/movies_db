@@ -17,14 +17,14 @@
                 <tr>
                     <td>год</td>
                     <td>
-                        <a href="{% url 'year_view' year=movie.year %}">{{ movie.year }}</a>
+                        <a href="{% url 'year_view' param=movie.year %}">{{ movie.year }}</a>
                     </td>
                 </tr>
                 <tr>
                     <td>страна</td>
                     <td>
                         {% for country in movie.country.all %}
-                            <a href="{% url 'country_view' country=country %}">
+                            <a href="{% url 'country_view' param=country %}">
                                 {{ country }}{% if not forloop.last %},{% endif %}</a>
                         {% endfor %}
                     </td>
@@ -33,7 +33,7 @@
                     <td>жанр</td>
                     <td>
                         {% for genre in movie.genre.all %}
-                            <a href="{% url 'genre_view' genre=genre %}">
+                            <a href="{% url 'genre_view' param=genre %}">
                                 {{ genre }}{% if not forloop.last %},{% endif %}</a>
                         {% endfor %}
                     </td>
@@ -41,14 +41,14 @@
                 <tr>
                     <td>режиссер</td>
                     <td>
-                        <a href="">{{ movie.director }}</a>
+                        <a href="{% url 'director_view' pk=movie.director.id %}">{{ movie.director }}</a>
                     </td>
                 </tr>
                 <tr>
                     <td>в главных ролях</td>
                     <td>
                         {% for actor in movie.actors.all %}
-                            <a href="">{{ actor }}{% if not forloop.last %},{% endif %}</a>
+                            <a href="{% url 'actor_view' pk=actor.id %}">{{ actor }}{% if not forloop.last %},{% endif %}</a>
                         {% endfor %}
                     </td>
                 </tr>

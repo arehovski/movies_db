@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="row mt-3 person-info">
+        <div class="col-4 person-poster">
+            <img class="rounded" src="{{ person.image.url }}" alt="person-poster" height="360" width="240">
+        </div>
+        <div class="col-8">
+            <h2>
+                {{ person }}
+            </h2>
+            {% if person.name_en %}
+                <h4>{{ person.name_en }}</h4>
+            {% endif %}
+            <table class="info">
+                <tbody>
+                <tr>
+                    <td>профессия</td>
+                    {% block profession %}
+                        <td>Режиссер</td>
+                    {% endblock %}
+                </tr>
+                {% if person.born_date %}
+                    <tr>
+                        <td>дата рождения</td>
+                        <td>{{ person.born_date }}</td>
+                    </tr>
+                {% endif %}
+                {% if person.born.place %}
+                    <tr>
+                        <td>место рождения</td>
+                        <td>{{ person.born_place }}</td>
+                    </tr>
+                {% endif %}
+                {% if person.link %}
+                    <tr>
+                        <td>кинопоиск</td>
+                        <td><a href="{{ person.link }}">(тыц)</a></td>
+                    </tr>
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row mt-3 related-movies">
+        <div class="col-12">{% block related_header %}Фильмы, которые снимал режиссер: {% endblock %}</div>
+        {% for movie in related_movies %}
+            <div class="col-3">
+                <a href="{% url 'movie_view' pk=movie.id %}">
+                    <img class=" rounded" src="{{ movie.image.url }}" alt="movie-poster" height="150"
+                         width="100">
+                    <p>{{ movie.title }}</p>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock content %}

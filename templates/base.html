@@ -47,16 +47,16 @@
                                 <div>{{ movie.title_en }}</div>
                             {% endif %}
                             <div>
-                                <p><a href="{% url 'year_view' year=movie.year %}">{{ movie.year }}</a></p>
+                                <p><a href="{% url 'year_view' param=movie.year %}">{{ movie.year }}</a></p>
                                 <span class="movie-genres">
                                 {% for genre in movie.genre.all %}
-                                    <a href="{% url 'genre_view' genre=genre %}">{{ genre }}</a>
+                                    <a href="{% url 'genre_view' param=genre %}">{{ genre }}</a>
                                     {% if not forloop.last %},{% endif %}
                                 {% endfor %}
                                 </span>
                                 <span class="movie-countries pl-1">
                                 {% for country in movie.country.all %}
-                                    <a href="{% url 'country_view' country=country %}">{{ country }}</a>
+                                    <a href="{% url 'country_view' param=country %}">{{ country }}</a>
                                     {% if not forloop.last %},{% endif %}
                                 {% endfor %}
                                 </span>
