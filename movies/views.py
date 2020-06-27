@@ -5,16 +5,16 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import get_object_or_404
 
 
-def pagination(iterable, request):
-    paginator = Paginator(iterable, 15)
+def pagination(objects_list, request):
+    paginator = Paginator(objects_list, 15)
     page = request.GET.get('page')
     try:
-        iterable = paginator.page(page)
+        objects_list = paginator.page(page)
     except PageNotAnInteger:
-        iterable = paginator.page(1)
+        objects_list = paginator.page(1)
     except EmptyPage:
-        iterable = paginator.page(paginator.num_pages)
-    return iterable
+        objects_list = paginator.page(paginator.num_pages)
+    return objects_list
 
 
 # Create your views here.
@@ -33,24 +33,26 @@ class HomePage(views.View):
 class GenreView(views.View):
     template = "base.html"
 
-    def get(self, request, genre):
-        movies = Movie.objects.filter(genre__genre=f"{genre}")
+    @staticmethod
+    def get_movies(query_param):
+        return Movie.objects.filter(genre__genre=query_param)
+
+    def get(self, request, param):
+        movies = self.get_movies(param)
         movies = pagination(movies, request)
         return render(request, self.template, context={'movies': movies})
 
 
-class YearView(views.View):
-    def get(self, request, year):
-        movies = Movie.objects.filter(year=int(f"{year}"))
-        movies = pagination(movies, request)
-        return render(request, "base.html", context={'movies': movies})
+class YearView(GenreView):
+    @staticmethod
+    def get_movies(query_param):
+        return Movie.objects.filter(year=query_param)
 
 
-class CountryView(views.View):
-    def get(self, request, country):
-        movies = Movie.objects.filter(country__country__exact=f"{country}")
-        movies = pagination(movies, request)
-        return render(request, "base.html", context={'movies': movies})
+class CountryView(GenreView):
+    @staticmethod
+    def get_movies(query_param):
+        return Movie.objects.filter(country__country__exact=query_param)
 
 
 class MovieView(views.View):
@@ -64,3 +66,30 @@ class MovieView(views.View):
             'similar_movies': similar_movies
         }
         return render(request, self.template, context=context)
+
+
+class DirectorView(views.View):
+    template = 'director.html'
+    model = Director
+
+    @staticmethod
+    def get_related_movies(query_param):
+        return Movie.objects.filter(director=query_param)
+
+    def get(self, request, pk):
+        person = get_object_or_404(self.model, pk=pk)
+        related_movies = self.get_related_movies(person.id)
+        context = {
+            'person': person,
+            'related_movies': related_movies
+        }
+        return render(request, self.template, context)
+
+
+class ActorView(DirectorView):
+    template = 'actor.html'
+    model = Actor
+
+    @staticmethod
+    def get_related_movies(query_param):
+        return Movie.objects.filter(actors=query_param)

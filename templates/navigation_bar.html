@@ -5,7 +5,7 @@
         <div class="col-6 genre">
             <p>По жанрам</p>
             {% for genre in genres %}
-                <a href="{% url 'genre_view' genre=genre%}"><span>{{ genre.genre }}</span></a>
+                <a href="{% url 'genre_view' param=genre %}"><span>{{ genre.genre }}</span></a>
                 <span class="text-left">({{ genre.movie_set.count }})</span>
                 <br/>
             {% endfor %}
@@ -14,14 +14,14 @@
             <p>По году</p>
             <hr/>
             {% for year in years %}
-                <a href="{% url 'year_view' year=year.year %}"><span>{{ year.year }}</span></a>
+                <a href="{% url 'year_view' param=year.year %}"><span>{{ year.year }}</span></a>
                 <span>({{ year.total }})</span>
                 <br/>
             {% endfor %}
             <hr/>
             <p>По странам</p>
             {% for country in countries %}
-                <a href="{% url 'country_view' country=country %}"><span>{{ country }}</span></a>
+                <a href="{% url 'country_view' param=country %}"><span>{{ country }}</span></a>
                 <span>({{ country.movie_set.count }})</span>
                 <br/>
             {% endfor %}
