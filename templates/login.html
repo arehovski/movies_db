@@ -1,12 +1,16 @@
 {% extends 'base.html' %}
 
 
+{% block login %}
+{% endblock %}
 {% block body %}
     <div class="col-12 rounded" style="background-color: white">
         <form class="text-center p-5" method="post" action="{% url 'login' %}">
             {% csrf_token %}
             {% if form.errors %}
-                <div class="errorlist">{{ form.error_messages.invalid_login }}</div>
+                {% for error in form.non_field_errors %}
+                    <div class="errorlist">{{ error }}</div>
+                {% endfor %}
             {% endif %}
             <div>Имя пользователя:</div>
             {{ form.username }}<br/>

@@ -23,7 +23,7 @@
                 {% if person.born_date %}
                     <tr>
                         <td>дата рождения</td>
-                        <td>{{ person.born_date }}</td>
+                        <td>{{ person.born_date|date:"d.m.Y" }}</td>
                     </tr>
                 {% endif %}
                 {% if person.born.place %}

@@ -16,3 +16,10 @@ class RegistrationForm(forms.ModelForm):
         repeat_password = self.cleaned_data['repeat_password']
         if password != repeat_password:
             raise ValidationError("Пароли должны совпадать.")
+
+    def clean_username(self):
+        username = self.cleaned_data['username']
+        user = User.objects.filter(username=username).exists()
+        if user:
+            raise ValidationError(f"Имя пользователя {username} уже используется, пожалуйста, придумайте другое.")
+        return username
