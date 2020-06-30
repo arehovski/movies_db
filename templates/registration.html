@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+
+{% block login %}
+{% endblock %}
+{% block body %}
+    <div class="col-12 rounded" style="background-color: white">
+
+        <form action="{% url 'registration' %}" method="post" class="text-center p-5">
+            {% csrf_token %}
+            {% if form.errors %}
+                {% for error in form.errors.values %}
+                    <div class="errorlist">{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+            Имя пользователя:<br/>
+            {{ form.username }}<br/>
+            Имя:<br/>
+            {{ form.first_name }}<br/>
+            Фамилия:<br/>
+            {{ form.last_name }}<br/>
+            Адрес электронной почты:<br/>
+            {{ form.email }}<br/>
+            Пароль:<br/>
+            {{ form.password }}<br/>
+            Подтвердите пароль:<br/>
+            {{ form.repeat_password }}<br/>
+            <button type="submit">Register</button>
+        </form>
+        <div class="text-center">Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a></div>
+    </div>
+{% endblock %}

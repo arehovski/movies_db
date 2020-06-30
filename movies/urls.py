@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import HomePage, GenreView, YearView, CountryView, MovieView, DirectorView, ActorView
+from .views import *
 
 
 urlpatterns = [
@@ -10,5 +10,7 @@ urlpatterns = [
     path('movie/<int:pk>', MovieView.as_view(), name='movie_view'),
     path('director/<int:pk>', DirectorView.as_view(), name='director_view'),
     path('actor/<int:pk>', ActorView.as_view(), name='actor_view'),
-
+    path('registration', RegistrationView.as_view(), name='registration'),
+    path('login', LoginView.as_view(), name='login'),
+    path('logout', logout_view, name='logout'),
 ]
