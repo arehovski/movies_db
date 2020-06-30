@@ -16,88 +16,101 @@
             <div class="col-3 m-2 pt-3 pb-3 rounded" style="background-color: #585858">
                 <a href="{% url 'home_page' %}">MOVIES DATABASE</a>
             </div>
-            <div class="col-6 search">
+            <div class="col-5 search">
                 <form method="get">
                     {% csrf_token %}
 
                 </form>
             </div>
-            <div class="col-3 login rounded-right" style="background-color: #0c5460">
-
-            </div>
+            {% block login %}
+                <div class="col-3 login">
+                    {% if user.is_authenticated %}
+                        <p class="pt-2">Добро пожаловать, {% if user.is_staff %}
+                            <a href="/admin/">{{ user.first_name.capitalize }}</a>!
+                        {% else %}
+                            {{ user.first_name.capitalize }}!
+                        {% endif %}</p>
+                        <a href="{% url 'logout' %}">Выйти</a>
+                    {% else %}
+                        <div><a href="{% url 'login' %}">Войти</a></div>
+                    {% endif %}
+                </div>
+            {% endblock login %}
         {% endblock %}
     </div>
     <div class="row mb-2 mt-2">
-        {% navigation_bar %}
-        <div class="col-9 rounded-right movie-list" style="background-color: #ffffff">
-            {% block content %}
-                <hr/>
-                {% for movie in movies %}
-                    <div class="row">
-                        <div class="col-2">
-                            <a href="{% url 'movie_view' pk=movie.id %}"><img
-                                    class="movie-list-poster rounded" height="180" width="120"
-                                    src="{{ movie.image.url }}" alt="movie-poster"></a>
-                        </div>
-                        <div class="col-8">
-                            <a href="{% url 'movie_view' pk=movie.id %}">
-                                <h4>{{ movie.title }}</h4>
-                            </a>
-                            {% if movie.title_en %}
-                                <div>{{ movie.title_en }}</div>
-                            {% endif %}
-                            <div>
-                                <p><a href="{% url 'year_view' param=movie.year %}">{{ movie.year }}</a></p>
-                                <span class="movie-genres">
+        {% block body %}
+            {% navigation_bar %}
+            <div class="col-9 rounded-right movie-list" style="background-color: #ffffff">
+                {% block content %}
+                    <hr/>
+                    {% for movie in movies %}
+                        <div class="row">
+                            <div class="col-2">
+                                <a href="{% url 'movie_view' pk=movie.id %}"><img
+                                        class="movie-list-poster rounded" height="180" width="120"
+                                        src="{{ movie.image.url }}" alt="movie-poster"></a>
+                            </div>
+                            <div class="col-8">
+                                <a href="{% url 'movie_view' pk=movie.id %}">
+                                    <h4>{{ movie.title }}</h4>
+                                </a>
+                                {% if movie.title_en %}
+                                    <div>{{ movie.title_en }}</div>
+                                {% endif %}
+                                <div>
+                                    <p><a href="{% url 'year_view' param=movie.year %}">{{ movie.year }}</a></p>
+                                    <span class="movie-genres">
                                 {% for genre in movie.genre.all %}
                                     <a href="{% url 'genre_view' param=genre %}">{{ genre }}</a>
                                     {% if not forloop.last %},{% endif %}
                                 {% endfor %}
                                 </span>
-                                <span class="movie-countries pl-1">
+                                    <span class="movie-countries pl-1">
                                 {% for country in movie.country.all %}
                                     <a href="{% url 'country_view' param=country %}">{{ country }}</a>
                                     {% if not forloop.last %},{% endif %}
                                 {% endfor %}
                                 </span>
+                                </div>
+                            </div>
+                            <div class="col-2 rating">
+                                <p>Рейтинг кинопоиска {{ movie.rating_kp }}</p>
+                                {% if movie.rating_imdb %}
+                                    <p>Рейтинг IMDB {{ movie.rating_imdb }}</p>
+                                {% endif %}
                             </div>
                         </div>
-                        <div class="col-2 rating">
-                            <p>Рейтинг кинопоиска {{ movie.rating_kp }}</p>
-                            {% if movie.rating_imdb %}
-                                <p>Рейтинг IMDB {{ movie.rating_imdb }}</p>
-                            {% endif %}
-                        </div>
-                    </div>
-                    <hr/>
-                {% endfor %}
+                        <hr/>
+                    {% endfor %}
 
-                {% block pagination %}
-                    {% if movies %}
-                        <ul class="pagination">
-                            {% if movies.has_previous %}
-                                <li class="page-item">
-                                    <a class="page-link" href="?page={{ movies.previous_page_number }}">&laquo;
-                                        previous</a>
+                    {% block pagination %}
+                        {% if movies %}
+                            <ul class="pagination">
+                                {% if movies.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ movies.previous_page_number }}">&laquo;
+                                            previous</a>
+                                    </li>
+                                {% endif %}
+                                <li class="page-item active">
+                                    {% for i in movies.paginator.page_range %}
+                                        {% ifequal i movies.number %}
+                                            <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                                        {% endifequal %}
+                                    {% endfor %}
                                 </li>
-                            {% endif %}
-                            <li class="page-item active">
-                                {% for i in movies.paginator.page_range %}
-                                    {% ifequal i movies.number %}
-                                        <a class="page-link" href="?page={{ i }}">{{ i }}</a>
-                                    {% endifequal %}
-                                {% endfor %}
-                            </li>
-                            {% if movies.has_next %}
-                                <li class="page-item">
-                                    <a class="page-link" href="?page={{ movies.next_page_number }}">next &raquo;</a>
-                                </li>
-                            {% endif %}
-                        </ul>
-                    {% endif %}
-                {% endblock pagination %}
-            {% endblock content %}
-        </div>
+                                {% if movies.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ movies.next_page_number }}">next &raquo;</a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        {% endif %}
+                    {% endblock pagination %}
+                {% endblock content %}
+            </div>
+        {% endblock body %}
     </div>
 </div>
 
