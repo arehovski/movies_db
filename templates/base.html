@@ -23,7 +23,7 @@
                 </form>
             </div>
             {% block login %}
-                <div class="col-3 login">
+                <div class="col-3 login pt-4 text-right">
                     {% if user.is_authenticated %}
                         <p class="pt-2">Добро пожаловать, {% if user.is_staff %}
                             <a href="/admin/">{{ user.first_name.capitalize }}</a>!
