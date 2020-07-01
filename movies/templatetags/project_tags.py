@@ -1,12 +1,13 @@
 from django import template
 from django.db.models import Count
 from movies.models import Director, Actor, Genre, Country, Movie
+from movies.forms import SearchForm
 
 
 register = template.Library()
 
 
-@register.inclusion_tag('navigation_bar.html')
+@register.inclusion_tag('templatetags/navigation_bar.html')
 def navigation_bar():
     genres = Genre.objects.all().annotate(total=Count("movie")).order_by('-total')
     countries = Country.objects.all().annotate(total=Count('movie')).order_by('-total')[:8]
@@ -16,3 +17,8 @@ def navigation_bar():
         "years": years,
         "countries": countries
     }
+
+
+@register.inclusion_tag('templatetags/search_form.html')
+def search_form():
+    return {'form': SearchForm()}

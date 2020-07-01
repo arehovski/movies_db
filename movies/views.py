@@ -8,6 +8,7 @@ from .forms import RegistrationForm
 from django.shortcuts import redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector, TrigramSimilarity
 
 
 def pagination(objects_list, request):
@@ -164,6 +165,4 @@ class SearchView(ListView):
     template_name = 'search.html'
 
     def get_queryset(self):
-        pass
-
-
+        return Movie.objects.filter(title__icontains=f"{self.request.GET.get('query')}")

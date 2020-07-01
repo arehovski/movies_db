@@ -1,5 +1,5 @@
 {% load static %}
-{% load navigation_bar %}
+{% load project_tags %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -16,14 +16,16 @@
             <div class="col-3 m-2 pt-3 pb-3 rounded" style="background-color: #585858">
                 <a href="{% url 'home_page' %}">MOVIES DATABASE</a>
             </div>
-            <div class="col-5 search">
-                <form method="get">
-                    {% csrf_token %}
-
+            <div class="col-6 pt-3 text-center">
+                <form method="get" action="{% url 'search' %}">
+                    {% search_form %}
+                    <div class="input-group-append">
+                        <button class="btn btn-primary btn-sm" type="submit">Искать</button>
+                    </div>
                 </form>
             </div>
             {% block login %}
-                <div class="col-3 login pt-4 text-right">
+                <div class="col-2 login pt-4 text-right">
                     {% if user.is_authenticated %}
                         <p class="pt-2">Добро пожаловать, {% if user.is_staff %}
                             <a href="/admin/">{{ user.username }}</a>!
