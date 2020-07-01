@@ -13,19 +13,20 @@
                     <div class="errorlist">{{ error }}</div>
                 {% endfor %}
             {% endif %}
-            Имя пользователя:<br/>
+            Имя пользователя: *<br/>
             {{ form.username }}<br/>
             Имя:<br/>
             {{ form.first_name }}<br/>
             Фамилия:<br/>
             {{ form.last_name }}<br/>
-            Адрес электронной почты:<br/>
+            Адрес электронной почты: *<br/>
             {{ form.email }}<br/>
-            Пароль:<br/>
+            Пароль: *<br/>
             {{ form.password }}<br/>
-            Подтвердите пароль:<br/>
+            Подтвердите пароль: *<br/>
             {{ form.repeat_password }}<br/>
             <button type="submit">Register</button>
+            <div class="text-center">* Обязательные для заполнения поля.</div>
         </form>
         <div class="text-center">Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a></div>
     </div>

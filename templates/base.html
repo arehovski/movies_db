@@ -26,9 +26,9 @@
                 <div class="col-3 login pt-4 text-right">
                     {% if user.is_authenticated %}
                         <p class="pt-2">Добро пожаловать, {% if user.is_staff %}
-                            <a href="/admin/">{{ user.first_name.capitalize }}</a>!
+                            <a href="/admin/">{{ user.username }}</a>!
                         {% else %}
-                            {{ user.first_name.capitalize }}!
+                            {{ user.username }}!
                         {% endif %}</p>
                         <a href="{% url 'logout' %}">Выйти</a>
                     {% else %}
