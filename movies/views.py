@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django import views
+from django.views.generic import ListView
 from .models import Actor, Director, Movie, Genre, Country, User
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import get_object_or_404
@@ -154,3 +155,15 @@ class LoginView(views.View):
             login(request, user)
             return redirect('home_page')
         return render(request, self.template, {'form': form})
+
+
+class SearchView(ListView):
+    model = Movie
+    context_object_name = 'movies'
+    paginate_by = 10
+    template_name = 'search.html'
+
+    def get_queryset(self):
+        pass
+
+

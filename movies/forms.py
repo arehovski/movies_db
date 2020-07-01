@@ -23,3 +23,9 @@ class RegistrationForm(forms.ModelForm):
         if user:
             raise ValidationError(f"Имя пользователя {username} уже используется, пожалуйста, придумайте другое.")
         return username
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if not email:
+            raise ValidationError("Адрес электронной почты не может быть пустым.")
+        return email
