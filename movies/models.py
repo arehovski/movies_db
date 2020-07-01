@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.postgres.indexes import GinIndex
 
 
 # Create your models here.
@@ -47,10 +48,10 @@ class Country(models.Model):
 class Movie(models.Model):
     title = models.CharField(max_length=255)
     title_en = models.CharField(max_length=255, null=True, blank=True)
-    year = models.IntegerField()
+    year = models.PositiveIntegerField()
     country = models.ManyToManyField(Country)
     genre = models.ManyToManyField(Genre)
-    duration_min = models.IntegerField()
+    duration_min = models.PositiveIntegerField()
     description = models.TextField(null=True, blank=True)
     image = models.ImageField(null=True, blank=True, upload_to='movies')
     premiere = models.DateField(null=True, blank=True)

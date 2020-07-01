@@ -29,3 +29,10 @@ class RegistrationForm(forms.ModelForm):
         if not email:
             raise ValidationError("Адрес электронной почты не может быть пустым.")
         return email
+
+
+class SearchForm(forms.Form):
+    query = forms.CharField(label='', widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': "Название фильма или сериала",
+    }))
