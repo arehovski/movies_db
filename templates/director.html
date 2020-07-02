@@ -12,7 +12,7 @@
             {% if person.name_en %}
                 <h4>{{ person.name_en }}</h4>
             {% endif %}
-            <table class="info">
+            <table class="table table-striped">
                 <tbody>
                 <tr>
                     <td>профессия</td>
@@ -47,7 +47,7 @@
         {% for movie in related_movies %}
             <div class="col-3">
                 <a href="{% url 'movie_view' pk=movie.id %}">
-                    <img class=" rounded" src="{{ movie.image.url }}" alt="movie-poster" height="150"
+                    <img class="img-thumbnail rounded" src="{{ movie.image.url }}" alt="movie-poster" height="150"
                          width="100">
                     <p>{{ movie.title }}</p>
                 </a>

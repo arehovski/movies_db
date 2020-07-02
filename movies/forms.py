@@ -33,6 +33,6 @@ class RegistrationForm(forms.ModelForm):
 
 class SearchForm(forms.Form):
     query = forms.CharField(label='', widget=forms.TextInput(attrs={
-        'class': 'form-control',
+        'class': 'form-control mr-sm-2 w-50',
         'placeholder': "Название фильма или сериала",
     }))
