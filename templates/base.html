@@ -11,21 +11,19 @@
 </head>
 <body>
 <div class="container">
-    <div class="row mt-3 mb-3 header rounded" style="background-color: #3d3d3d">
+    <div class="row mt-3 mb-3 header rounded">
         {% block header %}
-            <div class="col-3 m-2 pt-3 pb-3 rounded" style="background-color: #585858">
+            <div class="col-3  rounded">
                 <a href="{% url 'home_page' %}">MOVIES DATABASE</a>
             </div>
-            <div class="col-6 pt-3 text-center">
-                <form method="get" action="{% url 'search' %}">
+            <div class="col-7">
+                <form method="get" action="{% url 'search' %}" class="justify-content-center form-inline my-2 my-lg-0">
                     {% search_form %}
-                    <div class="input-group-append">
-                        <button class="btn btn-primary btn-sm" type="submit">Искать</button>
-                    </div>
+                    <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Искать</button>
                 </form>
             </div>
             {% block login %}
-                <div class="col-2 login pt-4 text-right">
+                <div class="col-2 login text-right">
                     {% if user.is_authenticated %}
                         <p class="pt-2">Добро пожаловать, {% if user.is_staff %}
                             <a href="/admin/">{{ user.username }}</a>!
@@ -50,7 +48,7 @@
                         <div class="row">
                             <div class="col-2">
                                 <a href="{% url 'movie_view' pk=movie.id %}"><img
-                                        class="movie-list-poster rounded" height="180" width="120"
+                                        class="movie-list-poster img-thumbnail rounded" height="180" width="120"
                                         src="{{ movie.image.url }}" alt="movie-poster"></a>
                             </div>
                             <div class="col-8">

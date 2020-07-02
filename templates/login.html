@@ -5,7 +5,7 @@
 {% endblock %}
 {% block body %}
     <div class="col-12 rounded" style="background-color: white">
-        <form class="text-center p-5" method="post" action="{% url 'login' %}">
+        <form class="form-group text-center p-5" method="post" action="{% url 'login' %}">
             {% csrf_token %}
             {% if form.errors %}
                 {% for error in form.non_field_errors %}
@@ -16,7 +16,7 @@
             {{ form.username }}<br/>
             <div>Пароль:</div>
             {{ form.password }}<br/>
-            <button type="submit">Log in</button>
+            <button class="btn btn-primary my-2" type="submit">Войти</button>
         </form>
         <div class="text-center">Еще нет аккаунта? <a href="{% url 'registration' %}">Зарегистрироваться</a></div>
     </div>
