@@ -3,11 +3,11 @@
 {% block content %}
     <div class="row mt-3 movie-info">
         <div class="col-4 movie-poster">
-            <img class="rounded" src="{{ movie.image.url }}" alt="movie-poster" height="360" width="240">
-            <div><span class="badge badge-pill badge-primary mt-3">КП {{ movie.rating_kp }}</span>
-                    {% if movie.rating_imdb %}
-                        <span class="badge badge-pill badge-dark mt-3">IMDB {{ movie.rating_imdb }}</span>
-                    {% endif %}
+            <img class="img-fluid rounded" src="{{ movie.image.url }}" alt="movie-poster" height="360" width="240">
+            <div><span class="rating badge badge-pill badge-primary mt-3">КП {{ movie.rating_kp }}</span>
+                {% if movie.rating_imdb %}
+                    <span class="rating badge badge-pill badge-dark mt-3">IMDB {{ movie.rating_imdb }}</span>
+                {% endif %}
             </div>
         </div>
         <div class="col-8">
@@ -74,19 +74,28 @@
             </table>
         </div>
     </div>
-    <div class="row mt-2 movie-desc">
-        <div class="col-12">
-            <div>{{ movie.description }}</div>
-        </div>
-        <div class="col-12">Если вам понравился этот фильм, не пропустите:</div>
-        {% for sim_movie in similar_movies %}
-            <div class="col-3">
-                <a href="{% url 'movie_view' pk=sim_movie.id %}">
-                    <img class="img-thumbnail rounded" src="{{ sim_movie.image.url }}" alt="movie-poster" height="150"
-                         width="100">
-                    <p>{{ sim_movie.title }}</p>
-                </a>
+    <div class="card mb-2">
+        <div class="card-header"><h6>Описание</h6></div>
+        <div class="card-body">{{ movie.description }}</div>
+    </div>
+    <div class="card">
+        <div class="card-header">Если вам понравился этот фильм, не пропустите:</div>
+        <div class="card-body">
+            <div class="row">
+                {% for sim_movie in similar_movies %}
+                    <div class="col-3">
+                        <div class="card mb-2">
+                            <a href="{% url 'movie_view' pk=sim_movie.id %}">
+                                <img class="card-img-top img-thumbnail rounded" src="{{ sim_movie.image.url }}"
+                                     alt="movie-poster"
+                                     height="150"
+                                     width="100">
+                                <div class="card-body">{{ sim_movie.title }}</div>
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
-        {% endfor %}
+        </div>
     </div>
 {% endblock content %}
