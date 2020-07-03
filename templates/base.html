@@ -19,7 +19,7 @@
             <div class="col-7">
                 <form method="get" action="{% url 'search' %}" class="justify-content-center form-inline my-2 my-lg-0">
                     {% search_form %}
-                    <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Искать</button>
+                    <button class="btn btn-primary my-2 my-sm-0" type="submit">Искать</button>
                 </form>
             </div>
             {% block login %}
@@ -30,9 +30,9 @@
                         {% else %}
                             {{ user.username }}!
                         {% endif %}</p>
-                        <a href="{% url 'logout' %}">Выйти</a>
+                        <div><a class="btn btn-outline-primary" href="{% url 'logout' %}">Выйти</a></div>
                     {% else %}
-                        <div><a href="{% url 'login' %}">Войти</a></div>
+                        <div><a class="btn btn-outline-primary" href="{% url 'login' %}">Войти</a></div>
                     {% endif %}
                 </div>
             {% endblock login %}
@@ -61,24 +61,25 @@
                                 <div>
                                     <p><a href="{% url 'year_view' param=movie.year %}">{{ movie.year }}</a></p>
                                     <span class="movie-genres">
-                                {% for genre in movie.genre.all %}
-                                    <a href="{% url 'genre_view' param=genre %}">{{ genre }}</a>
-                                    {% if not forloop.last %},{% endif %}
-                                {% endfor %}
-                                </span>
+                                    {% for genre in movie.genre.all %}
+                                        <a href="{% url 'genre_view' param=genre %}">{{ genre }}</a>
+                                        {% if not forloop.last %},{% endif %}
+                                    {% endfor %}
+                                    </span>
                                     <span class="movie-countries pl-1">
-                                {% for country in movie.country.all %}
-                                    <a href="{% url 'country_view' param=country %}">{{ country }}</a>
-                                    {% if not forloop.last %},{% endif %}
-                                {% endfor %}
+                                    {% for country in movie.country.all %}
+                                        <a href="{% url 'country_view' param=country %}">{{ country }}</a>
+                                        {% if not forloop.last %},{% endif %}
+                                    {% endfor %}
                                 </span>
                                 </div>
                             </div>
                             <div class="col-2 rating">
-                                <p>Рейтинг кинопоиска {{ movie.rating_kp }}</p>
-                                {% if movie.rating_imdb %}
-                                    <p>Рейтинг IMDB {{ movie.rating_imdb }}</p>
-                                {% endif %}
+                                <div class=""><span class="badge badge-pill badge-primary mt-3">КП {{ movie.rating_kp }}</span>
+                                    {% if movie.rating_imdb %}
+                                        <span class="badge badge-pill badge-dark mt-3">IMDB {{ movie.rating_imdb }}</span>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
                         <hr/>

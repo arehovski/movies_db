@@ -42,16 +42,24 @@
             </table>
         </div>
     </div>
-    <div class="row mt-3 related-movies">
-        <div class="col-12">{% block related_header %}Фильмы, которые снимал режиссер: {% endblock %}</div>
-        {% for movie in related_movies %}
-            <div class="col-3">
-                <a href="{% url 'movie_view' pk=movie.id %}">
-                    <img class="img-thumbnail rounded" src="{{ movie.image.url }}" alt="movie-poster" height="150"
-                         width="100">
-                    <p>{{ movie.title }}</p>
-                </a>
+    <div class="card my-3">
+        <div class="card-header">{% block related_header %}Фильмы, которые снимал режиссер: {% endblock %}</div>
+        <div class="card-body">
+            <div class="row">
+                {% for movie in related_movies %}
+                    <div class="col-3">
+                        <div class="card mb-2">
+                            <a href="{% url 'movie_view' pk=movie.id %}">
+                                <img class="card-img-top img-thumbnail rounded" src="{{ movie.image.url }}"
+                                     alt="movie-poster"
+                                     height="150"
+                                     width="100">
+                                <div class="card-body">{{ movie.title }}</div>
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
-        {% endfor %}
+        </div>
     </div>
 {% endblock content %}
