@@ -8,6 +8,7 @@ from .forms import RegistrationForm
 from django.shortcuts import redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib import messages
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector, TrigramSimilarity
 
 
@@ -63,7 +64,7 @@ class YearView(GenreView):
 
 
 class CountryView(GenreView):
-    template = 'country'
+    template = 'country.html'
     @staticmethod
     def get_movies(query_param):
         return Movie.objects.filter(country__country__exact=query_param)
@@ -174,3 +175,35 @@ class SearchView(ListView):
         context = super().get_context_data(**kwargs)
         context['query'] = self.request.GET.get('query')
         return context
+
+
+# TODO: wishlist
+def add_to_wish_list(request, pk):
+    movie = Movie.objects.get(pk=pk)
+    user = request.user
+    if user.is_authenticated:
+        user.wish_list.add(movie)
+        messages.success(request, 'Фильм добавлен в "Избранное"')
+        referer = request.headers.get("Referer")
+        if referer:
+            return redirect(referer)
+        else:
+            return redirect('/')
+    else:
+        return redirect('login')
+
+
+class WishListView(ListView):
+    model = Movie
+    context_object_name = 'movies'
+    paginate_by = 20
+    template_name = 'wish_list.html'
+
+    def get_queryset(self):
+        return Movie.objects.filter(user=self.request.user.pk)
+
+    def get(self, request, *args, **kwargs):
+        if self.request.user.is_authenticated:
+            return super().get(request, *args, **kwargs)
+        else:
+            return redirect('login')

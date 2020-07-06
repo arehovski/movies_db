@@ -1,10 +1,9 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 from django.contrib.postgres.indexes import GinIndex
 
 
 # Create your models here.
-
 class Person(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
@@ -67,3 +66,13 @@ class Movie(models.Model):
 
     def __str__(self):
         return f"{self.title}"
+
+
+class User(AbstractUser):
+    wish_list = models.ManyToManyField(Movie, through='WishList')
+
+
+class WishList(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    date_added = models.DateTimeField(auto_now_add=True, blank=True)
