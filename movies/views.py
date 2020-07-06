@@ -38,7 +38,7 @@ class HomePage(views.View):
 
 
 class GenreView(views.View):
-    template = "base.html"
+    template = "genre.html"
 
     @staticmethod
     def get_movies(query_param):
@@ -49,18 +49,21 @@ class GenreView(views.View):
         movies = pagination(movies, request)
         context = {
             'movies': movies,
-            'user': request.user
+            'user': request.user,
+            'param': param
         }
         return render(request, self.template, context=context)
 
 
 class YearView(GenreView):
+    template = 'year.html'
     @staticmethod
     def get_movies(query_param):
         return Movie.objects.filter(year=query_param)
 
 
 class CountryView(GenreView):
+    template = 'country'
     @staticmethod
     def get_movies(query_param):
         return Movie.objects.filter(country__country__exact=query_param)
@@ -166,3 +169,8 @@ class SearchView(ListView):
 
     def get_queryset(self):
         return Movie.objects.filter(title__icontains=f"{self.request.GET.get('query')}")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['query'] = self.request.GET.get('query')
+        return context
