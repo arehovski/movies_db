@@ -6,31 +6,34 @@
 <head>
     <meta charset="UTF-8">
     <title>Movies DB</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
 </head>
 <body>
-<div class="container">
-    <div class="row mt-3 mb-3 header rounded">
+<div class="container-fluid header">
+    <div class="row py-3 header">
         {% block header %}
-            <div class="col-3  rounded">
+            <div class="col-3 text-right">
                 <a href="{% url 'home_page' %}">MOVIES DATABASE</a>
             </div>
-            <div class="col-7">
+            <div class="col-6">
                 <form method="get" action="{% url 'search' %}" class="justify-content-center form-inline my-2 my-lg-0">
                     {% search_form %}
                     <button class="btn btn-primary my-2 my-sm-0" type="submit">Искать</button>
                 </form>
             </div>
             {% block login %}
-                <div class="col-2 login text-right">
+                <div class="col-3 login text-left">
                     {% if user.is_authenticated %}
-                        <p class="pt-2">Добро пожаловать, {% if user.is_staff %}
-                            <a href="/admin/">{{ user.username }}</a>!
-                        {% else %}
-                            {{ user.username }}!
-                        {% endif %}</p>
-                        <div><a class="btn btn-outline-primary" href="{% url 'logout' %}">Выйти</a></div>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle"
+                                    type="button" id="dropdownMenu1" data-toggle="dropdown"
+                                    aria-haspopup="true" aria-expanded="false">{{ user.username }}</button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                <a class="dropdown-item" href="{% url 'logout' %}">Выйти</a>
+                            </div>
+                        </div>
                     {% else %}
                         <div><a class="btn btn-outline-primary" href="{% url 'login' %}">Войти</a></div>
                     {% endif %}
@@ -38,17 +41,21 @@
             {% endblock login %}
         {% endblock %}
     </div>
-    <div class="row mb-2 mt-2">
+</div>
+<div class="container shadow-lg">
+    <div class="row text-dark my-3">
         {% block body %}
             {% navigation_bar %}
-            <div class="col-9 rounded-right movie-list" style="background-color: #ffffff">
+            <div class="col-9 border-left" style="background-color: #ffffff">
                 {% block content %}
+                    <h5 class="font-weight-bold d-flex flex-column pt-3 pl-1">
+                        {% block query %}Лучшие фильмы и сериалы{% endblock %}</h5>
                     <hr/>
                     {% for movie in movies %}
                         <div class="row">
                             <div class="col-2">
                                 <a href="{% url 'movie_view' pk=movie.id %}"><img
-                                        class="movie-list-poster img-thumbnail rounded" height="180" width="120"
+                                        class="img-thumbnail rounded" height="180" width="120"
                                         src="{{ movie.image.url }}" alt="movie-poster"></a>
                             </div>
                             <div class="col-8">
@@ -62,20 +69,21 @@
                                     <p><a href="{% url 'year_view' param=movie.year %}">{{ movie.year }}</a></p>
                                     <span class="movie-genres">
                                     {% for genre in movie.genre.all %}
-                                        <a href="{% url 'genre_view' param=genre %}">{{ genre }}</a>
-                                        {% if not forloop.last %},{% endif %}
+                                        <a href="{% url 'genre_view' param=genre %}">
+                                            {{ genre }}{% if not forloop.last %},{% endif %}</a>
                                     {% endfor %}
                                     </span>
                                     <span class="movie-countries pl-1">
                                     {% for country in movie.country.all %}
-                                        <a href="{% url 'country_view' param=country %}">{{ country }}</a>
-                                        {% if not forloop.last %},{% endif %}
+                                        <a href="{% url 'country_view' param=country %}">
+                                            {{ country }}{% if not forloop.last %},{% endif %}</a>
                                     {% endfor %}
                                 </span>
                                 </div>
                             </div>
                             <div class="col-2 rating">
-                                <div class=""><span class="badge badge-pill badge-primary mt-3">КП {{ movie.rating_kp }}</span>
+                                <div class=""><span
+                                        class="badge badge-pill badge-primary mt-3">КП {{ movie.rating_kp }}</span>
                                     {% if movie.rating_imdb %}
                                         <span class="badge badge-pill badge-dark mt-3">IMDB {{ movie.rating_imdb }}</span>
                                     {% endif %}
@@ -86,12 +94,14 @@
                     {% endfor %}
 
                     {% block pagination %}
-                        {% if movies %}
+                        {% if movies.paginator.num_pages > 1 %}
                             <ul class="pagination">
                                 {% if movies.has_previous %}
                                     <li class="page-item">
-                                        <a class="page-link" href="?page={{ movies.previous_page_number }}">&laquo;
-                                            previous</a>
+                                        <a class="page-link" href="?page=1">Первая</a>
+                                    </li>
+                                    <li>
+                                        <a class="page-link" href="?page={{ movies.previous_page_number }}">Пред.</a>
                                     </li>
                                 {% endif %}
                                 <li class="page-item active">
@@ -103,7 +113,10 @@
                                 </li>
                                 {% if movies.has_next %}
                                     <li class="page-item">
-                                        <a class="page-link" href="?page={{ movies.next_page_number }}">next &raquo;</a>
+                                        <a class="page-link" href="?page={{ movies.next_page_number }}">След.</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ movies.paginator.num_pages }}">Последняя</a>
                                     </li>
                                 {% endif %}
                             </ul>
@@ -115,6 +128,14 @@
     </div>
 </div>
 
-<script src="{% static "js/bootstrap.min.js" %}"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
 </body>
 </html>
