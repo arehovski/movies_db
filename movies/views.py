@@ -63,7 +63,7 @@ class YearView(GenreView):
 
 
 class CountryView(GenreView):
-    template = 'country'
+    template = 'country.html'
     @staticmethod
     def get_movies(query_param):
         return Movie.objects.filter(country__country__exact=query_param)

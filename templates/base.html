@@ -91,6 +91,8 @@
                             </div>
                         </div>
                         <hr/>
+                    {% empty %}
+                        <div class="pl-1">К сожалению, по данному запросу ничего не найдено.</div>
                     {% endfor %}
 
                     {% block pagination %}
