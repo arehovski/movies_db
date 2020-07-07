@@ -8,6 +8,7 @@ from .forms import RegistrationForm
 from django.shortcuts import redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib import messages
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector, TrigramSimilarity
 
 
@@ -174,3 +175,51 @@ class SearchView(ListView):
         context = super().get_context_data(**kwargs)
         context['query'] = self.request.GET.get('query')
         return context
+
+
+def add_to_wish_list(request, pk):
+    movie = Movie.objects.get(pk=pk)
+    user = request.user
+    if user.is_authenticated:
+        user.wish_list.add(movie)
+        messages.success(request, 'Фильм добавлен в папку "Избранное"')
+        referer = request.headers.get("Referer")
+        if referer:
+            return redirect(referer)
+        else:
+            return redirect('/')
+    else:
+        return redirect('login')
+
+
+def remove_from_wish_list(request, pk):
+    movie = Movie.objects.get(pk=pk)
+    user = request.user
+    if user.is_authenticated:
+        wish_list = user.wish_list.all()
+        if movie in wish_list:
+            user.wish_list.remove(movie)
+            messages.warning(request, 'Фильм удален из папки "Избранное"')
+        referer = request.headers.get("Referer")
+        if referer:
+            return redirect(referer)
+        else:
+            return redirect('/')
+    else:
+        return redirect('login')
+
+
+class WishListView(ListView):
+    model = Movie
+    context_object_name = 'movies'
+    paginate_by = 20
+    template_name = 'wish_list.html'
+
+    def get_queryset(self):
+        return Movie.objects.filter(user=self.request.user.pk).order_by('-wishlist')
+
+    def get(self, request, *args, **kwargs):
+        if self.request.user.is_authenticated:
+            return super().get(request, *args, **kwargs)
+        else:
+            return redirect('login')
