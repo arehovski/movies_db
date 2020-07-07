@@ -11,39 +11,47 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
 </head>
 <body>
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-warning" role="alert">{{ message }}</div>
+    {% endfor %}
+{% endif %}
 <div class="container-fluid header">
     <div class="row py-3 header">
         {% block header %}
-            <div class="col-3 text-right">
-                <a href="{% url 'home_page' %}">MOVIES DATABASE</a>
+            <div class="col text-right">
+                <a href="{% url 'home_page' %}">
+                    <img class="img-fluid" src="{% static 'img/kinobar.svg' %}" alt="sitelogo" width="110">
+                </a>
             </div>
-            <div class="col-6">
+            <div class="col-8">
                 <form method="get" action="{% url 'search' %}" class="justify-content-center form-inline my-2 my-lg-0">
                     {% search_form %}
                     <button class="btn btn-primary my-2 my-sm-0" type="submit">Искать</button>
                 </form>
             </div>
-            {% block login %}
-                <div class="col-3 login text-left">
+            <div class="col login text-left">
+                {% block login %}
                     {% if user.is_authenticated %}
                         <div class="dropdown">
                             <button class="btn btn-secondary dropdown-toggle"
                                     type="button" id="dropdownMenu1" data-toggle="dropdown"
                                     aria-haspopup="true" aria-expanded="false">{{ user.username }}</button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                <a class="dropdown-item" href="{% url 'wish_list' %}">Избранное</a>
                                 <a class="dropdown-item" href="{% url 'logout' %}">Выйти</a>
                             </div>
                         </div>
                     {% else %}
                         <div><a class="btn btn-outline-primary" href="{% url 'login' %}">Войти</a></div>
                     {% endif %}
-                </div>
-            {% endblock login %}
+                {% endblock login %}
+            </div>
         {% endblock %}
     </div>
 </div>
 <div class="container shadow-lg">
-    <div class="row text-dark my-3">
+    <div class="row my-3">
         {% block body %}
             {% navigation_bar %}
             <div class="col-9 border-left" style="background-color: #ffffff">
@@ -88,6 +96,11 @@
                                         <span class="badge badge-pill badge-dark mt-3">IMDB {{ movie.rating_imdb }}</span>
                                     {% endif %}
                                 </div>
+                                {% if movie in user.wish_list.all %}
+                                    <a href="{% url 'rm_movie' pk=movie.id %}">&#9733;</a>
+                                {% else %}
+                                    <a href="{% url 'add_movie' pk=movie.id %}">&#9734;</a>
+                                {% endif %}
                             </div>
                         </div>
                         <hr/>
@@ -100,10 +113,11 @@
                             <ul class="pagination">
                                 {% if movies.has_previous %}
                                     <li class="page-item">
-                                        <a class="page-link" href="?page=1">Первая</a>
+                                        <a class="page-link" href="?page=1">&laquo;</a>
                                     </li>
                                     <li>
-                                        <a class="page-link" href="?page={{ movies.previous_page_number }}">Пред.</a>
+                                        <a class="page-link" href="?page={{ movies.previous_page_number }}">
+                                            {{ movies.previous_page_number }}</a>
                                     </li>
                                 {% endif %}
                                 <li class="page-item active">
@@ -115,10 +129,12 @@
                                 </li>
                                 {% if movies.has_next %}
                                     <li class="page-item">
-                                        <a class="page-link" href="?page={{ movies.next_page_number }}">След.</a>
+                                        <a class="page-link" href="?page={{ movies.next_page_number }}">
+                                            {{ movies.next_page_number }}</a>
                                     </li>
                                     <li class="page-item">
-                                        <a class="page-link" href="?page={{ movies.paginator.num_pages }}">Последняя</a>
+                                        <a class="page-link"
+                                           href="?page={{ movies.paginator.num_pages }}">&raquo;</a>
                                     </li>
                                 {% endif %}
                             </ul>
