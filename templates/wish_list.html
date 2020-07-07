@@ -1,4 +1,27 @@
 {% extends 'base.html' %}
 
-
-{% block query %}Избранное{% endblock %}
+{% block content %}
+    <div class="card my-2">
+        <h5 class="card-header font-weight-bold">Избранное</h5>
+        <div class="card-body">
+            <div class="row">
+                {% for movie in movies %}
+                    <div class="col-3">
+                        <div class="card mb-2">
+                            <a href="{% url 'movie_view' pk=movie.id %}">
+                                <img class="card-img-top img-thumbnail rounded" src="{{ movie.image.url }}"
+                                     alt="movie-poster"
+                                     height="150"
+                                     width="100">
+                                <div class="card-body">{{ movie.title }}</div>
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+<hr/>
+{% block pagination %}
+{% endblock %}
