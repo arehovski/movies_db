@@ -9,6 +9,13 @@
                     <span class="rating badge badge-pill badge-dark mt-3">IMDB {{ movie.rating_imdb }}</span>
                 {% endif %}
             </div>
+            <div>
+                {% if movie in user.wish_list.all %}
+                    <a href="{% url 'rm_movie' pk=movie.id %}">&#9733;</a>
+                {% else %}
+                    <a href="{% url 'add_movie' pk=movie.id %}">&#9734;</a>
+                {% endif %}
+            </div>
         </div>
         <div class="col-8">
             <h2>

@@ -182,7 +182,7 @@ def add_to_wish_list(request, pk):
     user = request.user
     if user.is_authenticated:
         user.wish_list.add(movie)
-        messages.success(request, 'Фильм добавлен в "Избранное"')
+        messages.success(request, 'Фильм добавлен в папку "Избранное"')
         referer = request.headers.get("Referer")
         if referer:
             return redirect(referer)
@@ -191,7 +191,23 @@ def add_to_wish_list(request, pk):
     else:
         return redirect('login')
 
-# TODO: wishlist-remove, wishlist-links
+
+def remove_from_wish_list(request, pk):
+    movie = Movie.objects.get(pk=pk)
+    user = request.user
+    if user.is_authenticated:
+        wish_list = user.wish_list.all()
+        if movie in wish_list:
+            user.wish_list.remove(movie)
+            messages.warning(request, 'Фильм удален из папки "Избранное"')
+        referer = request.headers.get("Referer")
+        if referer:
+            return redirect(referer)
+        else:
+            return redirect('/')
+    else:
+        return redirect('login')
+
 
 class WishListView(ListView):
     model = Movie
