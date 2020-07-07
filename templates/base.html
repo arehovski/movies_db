@@ -11,6 +11,11 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
 </head>
 <body>
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-warning" role="alert">{{ message }}</div>
+    {% endfor %}
+{% endif %}
 <div class="container-fluid header">
     <div class="row py-3 header">
         {% block header %}
@@ -25,8 +30,8 @@
                     <button class="btn btn-primary my-2 my-sm-0" type="submit">Искать</button>
                 </form>
             </div>
-            {% block login %}
-                <div class="col login text-left">
+            <div class="col login text-left">
+                {% block login %}
                     {% if user.is_authenticated %}
                         <div class="dropdown">
                             <button class="btn btn-secondary dropdown-toggle"
@@ -40,13 +45,13 @@
                     {% else %}
                         <div><a class="btn btn-outline-primary" href="{% url 'login' %}">Войти</a></div>
                     {% endif %}
-                </div>
-            {% endblock login %}
+                {% endblock login %}
+            </div>
         {% endblock %}
     </div>
 </div>
 <div class="container shadow-lg">
-    <div class="row text-dark my-3">
+    <div class="row my-3">
         {% block body %}
             {% navigation_bar %}
             <div class="col-9 border-left" style="background-color: #ffffff">
@@ -91,7 +96,11 @@
                                         <span class="badge badge-pill badge-dark mt-3">IMDB {{ movie.rating_imdb }}</span>
                                     {% endif %}
                                 </div>
-                                <a href="{% url 'add_movie' pk=movie.id %}">В избранное</a>
+                                {% if movie in user.wish_list.all %}
+                                    <a href="{% url 'rm_movie' pk=movie.id %}">&#9733;</a>
+                                {% else %}
+                                    <a href="{% url 'add_movie' pk=movie.id %}">&#9734;</a>
+                                {% endif %}
                             </div>
                         </div>
                         <hr/>
@@ -104,7 +113,7 @@
                             <ul class="pagination">
                                 {% if movies.has_previous %}
                                     <li class="page-item">
-                                        <a class="page-link" href="?page=1">Первая</a>
+                                        <a class="page-link" href="?page=1">&laquo;</a>
                                     </li>
                                     <li>
                                         <a class="page-link" href="?page={{ movies.previous_page_number }}">
@@ -125,7 +134,7 @@
                                     </li>
                                     <li class="page-item">
                                         <a class="page-link"
-                                           href="?page={{ movies.paginator.num_pages }}">Последняя</a>
+                                           href="?page={{ movies.paginator.num_pages }}">&raquo;</a>
                                     </li>
                                 {% endif %}
                             </ul>
