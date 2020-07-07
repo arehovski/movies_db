@@ -14,17 +14,19 @@
 <div class="container-fluid header">
     <div class="row py-3 header">
         {% block header %}
-            <div class="col-3 text-right">
-                <a href="{% url 'home_page' %}">MOVIES DATABASE</a>
+            <div class="col text-right">
+                <a href="{% url 'home_page' %}">
+                    <img class="img-fluid" src="{% static 'img/kinobar.svg' %}" alt="sitelogo" width="110">
+                </a>
             </div>
-            <div class="col-6">
+            <div class="col-8">
                 <form method="get" action="{% url 'search' %}" class="justify-content-center form-inline my-2 my-lg-0">
                     {% search_form %}
                     <button class="btn btn-primary my-2 my-sm-0" type="submit">Искать</button>
                 </form>
             </div>
             {% block login %}
-                <div class="col-3 login text-left">
+                <div class="col login text-left">
                     {% if user.is_authenticated %}
                         <div class="dropdown">
                             <button class="btn btn-secondary dropdown-toggle"
@@ -105,7 +107,8 @@
                                         <a class="page-link" href="?page=1">Первая</a>
                                     </li>
                                     <li>
-                                        <a class="page-link" href="?page={{ movies.previous_page_number }}">Пред.</a>
+                                        <a class="page-link" href="?page={{ movies.previous_page_number }}">
+                                            {{ movies.previous_page_number }}</a>
                                     </li>
                                 {% endif %}
                                 <li class="page-item active">
@@ -117,10 +120,12 @@
                                 </li>
                                 {% if movies.has_next %}
                                     <li class="page-item">
-                                        <a class="page-link" href="?page={{ movies.next_page_number }}">След.</a>
+                                        <a class="page-link" href="?page={{ movies.next_page_number }}">
+                                            {{ movies.next_page_number }}</a>
                                     </li>
                                     <li class="page-item">
-                                        <a class="page-link" href="?page={{ movies.paginator.num_pages }}">Последняя</a>
+                                        <a class="page-link"
+                                           href="?page={{ movies.paginator.num_pages }}">Последняя</a>
                                     </li>
                                 {% endif %}
                             </ul>

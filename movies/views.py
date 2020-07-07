@@ -177,7 +177,6 @@ class SearchView(ListView):
         return context
 
 
-# TODO: wishlist
 def add_to_wish_list(request, pk):
     movie = Movie.objects.get(pk=pk)
     user = request.user
@@ -192,6 +191,7 @@ def add_to_wish_list(request, pk):
     else:
         return redirect('login')
 
+# TODO: wishlist-remove, wishlist-links
 
 class WishListView(ListView):
     model = Movie
@@ -200,7 +200,7 @@ class WishListView(ListView):
     template_name = 'wish_list.html'
 
     def get_queryset(self):
-        return Movie.objects.filter(user=self.request.user.pk)
+        return Movie.objects.filter(user=self.request.user.pk).order_by('-wishlist')
 
     def get(self, request, *args, **kwargs):
         if self.request.user.is_authenticated:
