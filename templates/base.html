@@ -11,11 +11,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
 </head>
 <body>
-{% if messages %}
-    {% for message in messages %}
-        <div class="alert alert-warning" role="alert">{{ message }}</div>
-    {% endfor %}
-{% endif %}
+
 <div class="container-fluid header">
     <div class="row py-3 header">
         {% block header %}
@@ -50,6 +46,11 @@
         {% endblock %}
     </div>
 </div>
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-warning" role="alert">{{ message }}</div>
+    {% endfor %}
+{% endif %}
 <div class="container shadow-lg">
     <div class="row my-3">
         {% block body %}
@@ -90,17 +91,25 @@
                                 </div>
                             </div>
                             <div class="col-2 rating">
-                                <div class=""><span
-                                        class="badge badge-pill badge-primary mt-3">КП {{ movie.rating_kp }}</span>
-                                    {% if movie.rating_imdb %}
-                                        <span class="badge badge-pill badge-dark mt-3">IMDB {{ movie.rating_imdb }}</span>
+                                <div class="text-right">
+                                    {% if movie in user.wish_list.all %}
+                                        <a href="{% url 'rm_movie' pk=movie.id %}">
+                                            <img src="{% static 'img/Flag Blue.svg' %}" width="25">
+                                        </a>
+                                    {% else %}
+                                        <a href="{% url 'add_movie' pk=movie.id %}">
+                                            <img src="{% static 'img/Flag Grey.svg' %}" width="25">
+                                        </a>
                                     {% endif %}
                                 </div>
-                                {% if movie in user.wish_list.all %}
-                                    <a href="{% url 'rm_movie' pk=movie.id %}">&#9733;</a>
-                                {% else %}
-                                    <a href="{% url 'add_movie' pk=movie.id %}">&#9734;</a>
-                                {% endif %}
+                                <div class="text-right">
+                                    <span class="badge badge-success mt-3">КП {{ movie.rating_kp|format_rating }}</span>
+                                </div>
+                                <div class="text-right">
+                                    {% if movie.rating_imdb %}
+                                        <a class="badge badge-warning mt-3">IMDB {{ movie.rating_imdb|format_rating }}</a>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
                         <hr/>

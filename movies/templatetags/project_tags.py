@@ -22,3 +22,8 @@ def navigation_bar():
 @register.inclusion_tag('templatetags/search_form.html')
 def search_form():
     return {'form': SearchForm()}
+
+
+@register.filter
+def format_rating(value):
+    return round(value, 1)

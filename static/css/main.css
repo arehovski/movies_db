@@ -6,11 +6,6 @@ body {
     background-color: black;
 }
 
-.date {
-    font-size: 1em;
-    font-style: italic;
-}
-
 .errorlist {
     color: #f63131;
 }
@@ -21,11 +16,4 @@ body {
 
 .movie-genres {
     border-right: 1px solid #5f5f5f;
-}
-
-.rating {
-    font-size: 1.25em;
-}
-\2605 {
-    size: 20px;
 }
