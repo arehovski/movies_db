@@ -1,4 +1,37 @@
 {% extends 'base.html' %}
 
 
-{% block query %}Вот что удалось найти по запросу "{{ query }}":{% endblock %}
+{% block query %}Вот что удалось найти по запросу "{{ query }}" (Результатов: {{ movies.count }}):{% endblock %}
+
+{% block pagination %}
+    {% if is_paginated %}
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?{{ decoded_query }}page=1">&laquo;</a>
+                </li>
+                <li>
+                    <a class="page-link" href="?{{ decoded_query }}page={{ page_obj.previous_page_number }}">
+                        {{ page_obj.previous_page_number }}</a>
+                </li>
+            {% endif %}
+            <li class="page-item active">
+                {% for i in page_obj.paginator.page_range %}
+                    {% ifequal i page_obj.number %}
+                        <a class="page-link" href="?page{{ decoded_query }}={{ i }}">{{ i }}</a>
+                    {% endifequal %}
+                {% endfor %}
+            </li>
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?{{ decoded_query }}page={{ page_obj.next_page_number }}">
+                        {{ page_obj.next_page_number }}</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link"
+                       href="?{{ decoded_query }}page={{ page_obj.paginator.num_pages }}">&raquo;</a>
+                </li>
+            {% endif %}
+        </ul>
+    {% endif %}
+{% endblock %}

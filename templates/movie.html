@@ -1,29 +1,35 @@
 {% extends "base.html" %}
+{% load static %}
+{% load project_tags %}
 
 {% block content %}
     <div class="row mt-3 movie-info">
         <div class="col-4 movie-poster">
             <img class="img-fluid rounded" src="{{ movie.image.url }}" alt="movie-poster" height="360" width="240">
-            <div><span class="rating badge badge-pill badge-primary mt-3">КП {{ movie.rating_kp }}</span>
+            <div><span class="badge badge-success mt-3">КП {{ movie.rating_kp|format_rating }}</span>
                 {% if movie.rating_imdb %}
-                    <span class="rating badge badge-pill badge-dark mt-3">IMDB {{ movie.rating_imdb }}</span>
-                {% endif %}
-            </div>
-            <div>
-                {% if movie in user.wish_list.all %}
-                    <a href="{% url 'rm_movie' pk=movie.id %}">&#9733;</a>
-                {% else %}
-                    <a href="{% url 'add_movie' pk=movie.id %}">&#9734;</a>
+                    <span class="badge badge-warning mt-3">IMDB {{ movie.rating_imdb|format_rating }}</span>
                 {% endif %}
             </div>
         </div>
         <div class="col-8">
-            <h2>
-                {{ movie.title }} {% if movie.is_tv_series %}(сериал){% endif %}
-            </h2>
-            {% if movie.title_en %}
-                <h4>{{ movie.title_en }}</h4>
-            {% endif %}
+            <div>
+                {% if movie in user.wish_list.all %}
+                    <a href="{% url 'rm_movie' pk=movie.id %}">
+                        <img class="float-right" src="{% static 'img/Flag Blue.svg' %}" width="25">
+                    </a>
+                {% else %}
+                    <a href="{% url 'add_movie' pk=movie.id %}">
+                        <img class="float-right" src="{% static 'img/Flag Grey.svg' %}" width="25">
+                    </a>
+                {% endif %}
+                <h2>
+                    {{ movie.title }} {% if movie.is_tv_series %}(сериал){% endif %}
+                </h2>
+                {% if movie.title_en %}
+                    <h4>{{ movie.title_en }}</h4>
+                {% endif %}
+            </div>
             <table class="table table-striped">
                 <tbody>
                 <tr>

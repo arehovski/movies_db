@@ -173,7 +173,9 @@ class SearchView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        query = self.request.GET.get('query')
         context['query'] = self.request.GET.get('query')
+        context['decoded_query'] = f"query={query}&"
         return context
 
 
