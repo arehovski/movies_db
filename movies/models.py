@@ -63,6 +63,7 @@ class Movie(models.Model):
 
     class Meta:
         ordering = ["-rating_kp"]
+        indexes = [GinIndex(fields=['title'])]
 
     def __str__(self):
         return f"{self.title}"

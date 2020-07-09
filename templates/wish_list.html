@@ -29,8 +29,6 @@
             </div>
         </div>
     </div>
-{% endblock %}
-<hr/>
 {% block pagination %}
     {% if is_paginated %}
         <ul class="pagination">
@@ -62,4 +60,5 @@
             {% endif %}
         </ul>
     {% endif %}
-{% endblock %}
+{% endblock pagination %}
+{% endblock content %}

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 
-{% block query %}Вот что удалось найти по запросу "{{ query }}" (Результатов: {{ movies.count }}):{% endblock %}
+{% block query %}Вот что удалось найти по запросу "{{ query }}" (Результатов: {{ page_obj.paginator.count }}):{% endblock %}
 
 {% block pagination %}
     {% if is_paginated %}

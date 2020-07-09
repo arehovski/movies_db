@@ -9,7 +9,7 @@ from django.shortcuts import redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
-from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector, TrigramSimilarity
+from django.contrib.postgres.search import SearchQuery, SearchVector, TrigramSimilarity
 
 
 def pagination(objects_list, request):
@@ -58,6 +58,7 @@ class GenreView(views.View):
 
 class YearView(GenreView):
     template = 'year.html'
+
     @staticmethod
     def get_movies(query_param):
         return Movie.objects.filter(year=query_param)
@@ -65,6 +66,7 @@ class YearView(GenreView):
 
 class CountryView(GenreView):
     template = 'country.html'
+
     @staticmethod
     def get_movies(query_param):
         return Movie.objects.filter(country__country__exact=query_param)
@@ -169,12 +171,17 @@ class SearchView(ListView):
     template_name = 'search.html'
 
     def get_queryset(self):
-        return Movie.objects.filter(title__icontains=f"{self.request.GET.get('query')}")
+        query = self.request.GET.get('query')
+        search_vector = SearchVector('title')
+        search_query = SearchQuery(query)
+        search_vector_trgm = TrigramSimilarity('title', query)
+        return Movie.objects.annotate(search=search_vector).filter(search=search_query) or Movie.objects.annotate(
+            similarity=search_vector_trgm).filter(similarity__gte=0.2).order_by('-similarity')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         query = self.request.GET.get('query')
-        context['query'] = self.request.GET.get('query')
+        context['query'] = query
         context['decoded_query'] = f"query={query}&"
         return context
 
