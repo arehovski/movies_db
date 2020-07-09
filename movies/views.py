@@ -41,8 +41,7 @@ class HomePage(views.View):
 class GenreView(views.View):
     template = "genre.html"
 
-    @staticmethod
-    def get_movies(query_param):
+    def get_movies(self, query_param):
         return Movie.objects.filter(genre__genre=query_param)
 
     def get(self, request, param):
@@ -59,16 +58,14 @@ class GenreView(views.View):
 class YearView(GenreView):
     template = 'year.html'
 
-    @staticmethod
-    def get_movies(query_param):
+    def get_movies(self, query_param):
         return Movie.objects.filter(year=query_param)
 
 
 class CountryView(GenreView):
     template = 'country.html'
 
-    @staticmethod
-    def get_movies(query_param):
+    def get_movies(self, query_param):
         return Movie.objects.filter(country__country__exact=query_param)
 
 
@@ -90,8 +87,7 @@ class DirectorView(views.View):
     template = 'director.html'
     model = Director
 
-    @staticmethod
-    def get_related_movies(query_param):
+    def get_related_movies(self, query_param):
         return Movie.objects.filter(director=query_param)
 
     def get(self, request, pk):
@@ -109,8 +105,7 @@ class ActorView(DirectorView):
     template = 'actor.html'
     model = Actor
 
-    @staticmethod
-    def get_related_movies(query_param):
+    def get_related_movies(self, query_param):
         return Movie.objects.filter(actors=query_param)
 
 
