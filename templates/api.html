@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+
+{% block query %}API{% endblock %}
+
+{% block content %}
+    <div class="card mt-3">
+        <h4 class="card-title pt-4 pl-4">Списки объектов по API:</h4>
+        <div class="card-body">
+            <ul class="list-group">
+                <li class="list-group-item list-group-item-primary">
+                    <a href="{% url 'movie_list' %}">Список фильмов</a>
+                </li>
+                <li class="list-group-item list-group-item-primary">
+                    <a href="{% url 'actor_list' %}">Список актеров</a>
+                </li>
+                <li class="list-group-item list-group-item-primary">
+                    <a href="{% url 'director_list' %}">Список режиссеров</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}
