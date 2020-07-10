@@ -17,3 +17,7 @@ body {
 .movie-genres {
     border-right: 1px solid #5f5f5f;
 }
+
+.footer {
+    background-color: black;
+}
