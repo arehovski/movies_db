@@ -48,7 +48,12 @@
 </div>
 {% if messages %}
     {% for message in messages %}
-        <div class="alert alert-warning" role="alert">{{ message }}</div>
+        {% if message.level == 30 %}
+            <div class="alert alert-warning" role="alert">{{ message }}</div>
+        {% endif %}
+        {% if message.level == 25 %}
+            <div class="alert alert-success" role="alert">{{ message }}</div>
+        {% endif %}
     {% endfor %}
 {% endif %}
 <div class="container shadow-lg">
@@ -152,6 +157,24 @@
                 {% endblock content %}
             </div>
         {% endblock body %}
+    </div>
+</div>
+<div class="container footer">
+    <div class="row p-5">
+        <div class="col-6">
+            <div class="text-secondary">Выпускной проект курса Python/Django IT Академии "Stormnet"
+                студента Ареховского Сергея Игоревича.</div>
+            <div class="text-secondary">&#169; 2020</div>
+        </div>
+        <div class="col-2 text-center p-2">
+            <a href="{% url 'api' %}"><span class="badge badge-pill badge-dark" style="font-size: 1.3em">API</span></a>
+        </div>
+        <div class="col-4 text-center">
+            <a href="https://github.com/arehovski"><img src="{% static 'img/Icon GitHub.svg' %}" width="50"></a>
+            <a href="https://vk.com/sergei_arehovski"><img src="{% static 'img/Icon VK.svg' %}" width="50"></a>
+            <a href="https://t.me/arehovski"><img src="{% static 'img/Icon Telegram.svg' %}" width="50"></a>
+            <a href="#"><img src="{% static 'img/Icon LinkedIn.svg' %}" width="50"></a>
+        </div>
     </div>
 </div>
 
