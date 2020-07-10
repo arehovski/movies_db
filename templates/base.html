@@ -20,10 +20,7 @@
                     <img class="img-fluid" src="{% static 'img/kinobar.svg' %}" alt="sitelogo" width="110">
                 </a>
             </div>
-            <div class="col-1 text-right">
-                <a href="{% url 'api_list' %}"><span class="badge badge-dark" style="font-size: 1.3em">API</span></a>
-            </div>
-            <div class="col-7">
+            <div class="col-8">
                 <form method="get" action="{% url 'search' %}" class="justify-content-center form-inline my-2 my-lg-0">
                     {% search_form %}
                     <button class="btn btn-primary my-2 my-sm-0" type="submit">Искать</button>

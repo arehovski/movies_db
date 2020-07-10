@@ -10,8 +10,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 from django.contrib.postgres.search import SearchQuery, SearchVector, TrigramSimilarity
-from .serializers import MovieSerializer
+from .serializers import MovieSerializer, ActorSerializer, DirectorSerializer
 from rest_framework.generics import ListAPIView
+from rest_framework.views import APIView
+from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 
 
@@ -232,7 +234,23 @@ class WishListView(ListView):
             return redirect('login')
 
 
+class KinobarAPI(APIView):
+    renderer_classes = [TemplateHTMLRenderer]
+
+    def get(self, request):
+        return Response(template_name='api.html')
+
+
 class MovieList(ListAPIView):
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
 
+
+class ActorList(ListAPIView):
+    queryset = Actor.objects.all()
+    serializer_class = ActorSerializer
+
+
+class DirectorList(ListAPIView):
+    queryset = Director.objects.all()
+    serializer_class = DirectorSerializer
