@@ -4,7 +4,7 @@ from django.views.generic import ListView
 from .models import Actor, Director, Movie, Genre, Country, User
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import get_object_or_404
-from .forms import RegistrationForm
+from .forms import RegistrationForm, FilterForm
 from django.shortcuts import redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
@@ -232,6 +232,12 @@ class WishListView(ListView):
             return super().get(request, *args, **kwargs)
         else:
             return redirect('login')
+
+
+class FilterView(views.View):
+    def get(self, request):
+        form = FilterForm()
+        return render(request, 'filter.html', {'form': form})
 
 
 class KinobarAPI(APIView):

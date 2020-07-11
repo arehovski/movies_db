@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block navigation %}
+    <form method="get" action="{% url 'filters' %}">
+        {{ form.genre }}
+        {{ form.country }}
+        {{ form.year }}
+        <button type="submit">Вывести результаты</button>
+    </form>
+{% endblock %}
