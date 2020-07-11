@@ -1,31 +1,29 @@
-<div class="col-3 nav-bar" style="background-color: #ffffff">
-    <h5 class="pt-3">Панель навигации</h5>
-    <hr/>
-    <div class="row">
-        <div class="col-6 genre">
-            <p>По жанрам</p>
-            {% for genre in genres %}
-                <a href="{% url 'genre_view' param=genre %}"><span>{{ genre.genre }}</span></a>
-                <span class="text-left">({{ genre.movie_set.count }})</span>
-                <br/>
-            {% endfor %}
-        </div>
-        <div class="col-6 year-country">
-            <p>По году</p>
-            <hr/>
-            {% for year in years %}
-                <a href="{% url 'year_view' param=year.year %}"><span>{{ year.year }}</span></a>
-                <span>({{ year.total }})</span>
-                <br/>
-            {% endfor %}
-            <hr/>
-            <p>По странам</p>
-            {% for country in countries %}
-                <a href="{% url 'country_view' param=country %}"><span>{{ country }}</span></a>
-                <span>({{ country.movie_set.count }})</span>
-                <br/>
-            {% endfor %}
-        </div>
+<h5 class="pt-3">Панель навигации</h5>
+<hr/>
+<div class="row">
+    <div class="col-6 genre">
+        <p>По жанрам</p>
+        {% for genre in genres %}
+            <a href="{% url 'genre_view' param=genre %}"><span>{{ genre.genre }}</span></a>
+            <span class="text-left">({{ genre.movie_set.count }})</span>
+            <br/>
+        {% endfor %}
     </div>
-    <hr/>
+    <div class="col-6 year-country">
+        <p>По году</p>
+        <hr/>
+        {% for year in years %}
+            <a href="{% url 'year_view' param=year.year %}"><span>{{ year.year }}</span></a>
+            <span>({{ year.total }})</span>
+            <br/>
+        {% endfor %}
+        <hr/>
+        <p>По странам</p>
+        {% for country in countries %}
+            <a href="{% url 'country_view' param=country %}"><span>{{ country }}</span></a>
+            <span>({{ country.movie_set.count }})</span>
+            <br/>
+        {% endfor %}
+    </div>
 </div>
+<hr/>
