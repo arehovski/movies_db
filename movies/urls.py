@@ -17,6 +17,7 @@ urlpatterns = [
     path('add_movie/<int:pk>', add_to_wish_list, name='add_movie'),
     path('rm_movie/<int:pk>', remove_from_wish_list, name='rm_movie'),
     path('wish_list', WishListView.as_view(), name='wish_list'),
+    path('filters', FilterView.as_view(), name='filters'),
     path('api/', KinobarAPI.as_view(), name='api'),
     path('api/movie_list', MovieList.as_view(), name='movie_list'),
     path('api/director_list', DirectorList.as_view(), name='director_list'),
