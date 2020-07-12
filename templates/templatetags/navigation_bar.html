@@ -24,6 +24,7 @@
             <span>({{ country.movie_set.count }})</span>
             <br/>
         {% endfor %}
+        <a href="{% url 'filters' %}"><button class="mt-2 btn btn-secondary btn-sm">Фильтры</button></a>
     </div>
 </div>
 <hr/>

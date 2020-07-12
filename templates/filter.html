@@ -1,10 +1,63 @@
 {% extends 'base.html' %}
 
 {% block navigation %}
-    <form method="get" action="{% url 'filters' %}">
+    <div class="col-3 form-group">
+    <form class="py-3" method="get" action="{% url 'filters' %}">
+        {{ form.genre.label }}
         {{ form.genre }}
+        {{ form.country.label }}
         {{ form.country }}
+        {{ form.year.label }}
         {{ form.year }}
-        <button type="submit">Вывести результаты</button>
+        <button class="mt-3 btn btn-secondary btn-block" type="submit">Вывести результаты</button>
     </form>
+    <a href="{% url 'filters' %}">
+        <button class="btn btn-outline-secondary btn-block">Сбросить фильтры</button>
+    </a>
+    </div>
 {% endblock %}
+
+{% block query %}
+    {% if params.genre %}
+        <div class="text-muted">Жанр: {{ params.genre }}</div>
+    {% endif %}
+    {% if params.country %}
+        <div class="text-muted">Страна: {{ params.country }}</div>
+    {% endif %}
+    {% if params.year %}
+        <div class="text-muted">Год: {{ params.year }}</div>
+    {% endif %}
+{% endblock %}
+
+{% block pagination %}
+    {% if movies.paginator.num_pages > 1 %}
+        <ul class="pagination">
+            {% if movies.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1{{ query_string }}">Первая</a>
+                </li>
+                <li>
+                    <a class="page-link" href="?page={{ movies.previous_page_number }}{{ query_string }}">
+                        {{ movies.previous_page_number }}</a>
+                </li>
+            {% endif %}
+            <li class="page-item active">
+                {% for i in movies.paginator.page_range %}
+                    {% ifequal i movies.number %}
+                        <a class="page-link" href="?page={{ i }}{{ query_string }}">{{ i }}</a>
+                    {% endifequal %}
+                {% endfor %}
+            </li>
+            {% if movies.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ movies.next_page_number }}{{ query_string }}">
+                        {{ movies.next_page_number }}</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link"
+                       href="?page={{ movies.paginator.num_pages }}{{ query_string }}">Последняя</a>
+                </li>
+            {% endif %}
+        </ul>
+    {% endif %}
+{% endblock pagination %}
