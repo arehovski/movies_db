@@ -4,7 +4,7 @@ from django.views.generic import ListView
 from .models import Actor, Director, Movie, Genre, Country, User
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import get_object_or_404
-from .forms import RegistrationForm
+from .forms import RegistrationForm, FilterForm
 from django.shortcuts import redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
@@ -232,6 +232,42 @@ class WishListView(ListView):
             return super().get(request, *args, **kwargs)
         else:
             return redirect('login')
+
+
+class FilterView(views.View):
+    def get(self, request):
+        form = FilterForm()
+        queryset = pagination(Movie.objects.all(), request)
+        query_string = ''
+        params = {}
+        if request.GET:
+            form = FilterForm(data=request.GET)
+            if form.is_valid():
+                genre = form.cleaned_data['genre']
+                genre_object_list = Movie.objects.filter(genre__genre=genre) if genre else Movie.objects.all()
+                country = form.cleaned_data['country']
+                country_object_list = Movie.objects.filter(country__country=country) if country \
+                    else Movie.objects.all()
+                year = form.cleaned_data['year']
+                year = int(year) if year else None
+                year_object_list = Movie.objects.filter(year=year) if year else Movie.objects.all()
+                queryset = pagination(genre_object_list.intersection(country_object_list).intersection(
+                    year_object_list).order_by('-rating_kp'), request)
+                query_params = {k: v for k, v in request.GET.items() if k != 'page'}
+                for k, v in query_params.items():
+                    query_string += f"&{k}={v}"
+                params = {
+                    'year': year,
+                    'country': country,
+                    'genre': genre
+                }
+        context = {
+            'form': form,
+            'movies': queryset,
+            'query_string': query_string,
+            'params': params
+        }
+        return render(request, 'filter.html', context)
 
 
 class KinobarAPI(APIView):

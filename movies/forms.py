@@ -1,6 +1,8 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from .models import User
+from .models import *
+import django_filters
+from datetime import datetime
 
 
 class RegistrationForm(forms.ModelForm):
@@ -36,3 +38,24 @@ class SearchForm(forms.Form):
         'class': 'form-control mr-sm-2 w-50',
         'placeholder': "Название фильма или сериала",
     }))
+
+
+class FilterForm(forms.Form):
+    genre = forms.ChoiceField(
+        choices=[('', 'Все')] + [(genre, genre) for genre in Genre.objects.all()],
+        required=False,
+        label="Жанр",
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    country = forms.ChoiceField(
+        choices=[('', 'Все')] + [(country, country) for country in Country.objects.all()],
+        required=False,
+        label="Страна",
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    year = forms.ChoiceField(
+        choices=[('', 'Все')] + [(i, i) for i in range(datetime.now().year, 1910, -1)],
+        required=False,
+        label="Год",
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
