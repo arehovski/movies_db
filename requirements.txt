@@ -8,7 +8,6 @@ constantly==15.1.0
 cryptography==2.9.2
 cssselect==1.1.0
 Django==3.0.7
-django-filter==2.3.0
 djangorestframework==3.11.0
 hyperlink==19.0.0
 idna==2.9
@@ -29,7 +28,6 @@ queuelib==1.5.0
 requests==2.24.0
 scraperapi-sdk==0.2.2
 Scrapy==2.1.0
-scrapy-djangoitem==1.1.1
 service-identity==18.1.0
 six==1.15.0
 sqlparse==0.3.1
