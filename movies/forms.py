@@ -2,6 +2,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from .models import *
 import django_filters
+from datetime import datetime
 
 
 class RegistrationForm(forms.ModelForm):
@@ -39,17 +40,22 @@ class SearchForm(forms.Form):
     }))
 
 
-# class FilterForm(django_filters.FilterSet):
-#     genre = django_filters.ModelMultipleChoiceFilter(field_name='genre', label='Жанр', queryset=Genre.objects.all())
-#     country = django_filters.ModelMultipleChoiceFilter(field_name='country', label='Страна', queryset=Country.objects.all())
-#     year = django_filters.ChoiceFilter()
-#
-#     class Meta:
-#         model = Movie
-#         fields = ['genre', 'year', 'country']
-
-
 class FilterForm(forms.Form):
-    genre = forms.ChoiceField(choices=[(genre, genre) for genre in Genre.objects.all()])
-    country = forms.ChoiceField(choices=[(country, country) for country in Country.objects.all()])
-    year = forms.ChoiceField(choices=[(i, i) for i in range(2020, 1910, -1)])
+    genre = forms.ChoiceField(
+        choices=[('', 'Все')] + [(genre, genre) for genre in Genre.objects.all()],
+        required=False,
+        label="Жанр",
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    country = forms.ChoiceField(
+        choices=[('', 'Все')] + [(country, country) for country in Country.objects.all()],
+        required=False,
+        label="Страна",
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    year = forms.ChoiceField(
+        choices=[('', 'Все')] + [(i, i) for i in range(datetime.now().year, 1910, -1)],
+        required=False,
+        label="Год",
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
