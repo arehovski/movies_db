@@ -2,7 +2,7 @@
 import scrapy
 import json
 
-with open("/home/arehovski/PycharmProjects/movies_db/movie_ids_best.json", 'r') as f:
+with open("/root/movies_db/movie_ids_best.json", 'r') as f:
     movie_ids = json.load(f)
 
 
