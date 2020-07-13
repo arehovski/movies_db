@@ -13,7 +13,7 @@ import os
 from django.core.wsgi import get_wsgi_application
 import django
 
-sys.path.append("/home/arehovski/PycharmProjects/movies_db")
+sys.path.append("/root/movies_db")
 os.environ['DJANGO_SETTINGS_MODULE'] = "movies_db.settings"
 application = get_wsgi_application()
 django.setup()
