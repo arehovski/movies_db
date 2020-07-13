@@ -62,7 +62,7 @@ class Movie(models.Model):
     link_kp = models.CharField(max_length=1000, null=True, blank=True)
 
     class Meta:
-        ordering = ["-rating_kp"]
+        ordering = ["-rating_kp", "id"]
         indexes = [GinIndex(fields=['title'])]
 
     def __str__(self):

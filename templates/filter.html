@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block navigation %}
-    <div class="col-3 form-group">
+    <div class="col-md-3 form-group">
     <form class="py-3" method="get" action="{% url 'filters' %}">
         {{ form.genre.label }}
         {{ form.genre }}

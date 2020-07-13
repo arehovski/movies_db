@@ -6,7 +6,7 @@
 {% block title %}{{ movie.title }}{% endblock %}
 {% block content %}
     <div class="row mt-3 movie-info">
-        <div class="col-4 movie-poster">
+        <div class="col-xs-12 col-sm-4">
             <img class="img-fluid rounded" src="{{ movie.image.url }}" alt="movie-poster" height="360" width="240">
             <div><span class="badge badge-success mt-3">КП {{ movie.rating_kp|format_rating }}</span>
                 {% if movie.rating_imdb %}
@@ -14,7 +14,7 @@
                 {% endif %}
             </div>
         </div>
-        <div class="col-8">
+        <div class="col-xs-12 col-sm-8">
             <div>
                 {% if movie in user.wish_list.all %}
                     <a href="{% url 'rm_movie' pk=movie.id %}">
@@ -102,7 +102,7 @@
         <div class="card-body">
             <div class="row">
                 {% for sim_movie in similar_movies %}
-                    <div class="col-3">
+                    <div class="col-6 col-md-4 col-lg-3">
                         <div class="card mb-2">
                             <a href="{% url 'movie_view' pk=sim_movie.id %}">
                                 <img class="card-img-top img-thumbnail rounded" src="{{ sim_movie.image.url }}"

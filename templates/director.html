@@ -3,10 +3,10 @@
 {% block title %}{{ person }}{% endblock %}
 {% block content %}
     <div class="row mt-3 person-info">
-        <div class="col-4 person-poster">
+        <div class="col-xs-12 col-sm-4">
             <img class="img-fluid rounded" src="{{ person.image.url }}" alt="person-poster" height="360" width="240">
         </div>
-        <div class="col-8">
+        <div class="col-xs-12 col-sm-8">
             <h2>
                 {{ person }}
             </h2>
@@ -48,7 +48,7 @@
         <div class="card-body">
             <div class="row">
                 {% for movie in related_movies %}
-                    <div class="col-3">
+                    <div class="col-6 col-md-4 col-lg-3">
                         <div class="card mb-2">
                             <a href="{% url 'movie_view' pk=movie.id %}">
                                 <img class="card-img-top img-thumbnail rounded" src="{{ movie.image.url }}"

@@ -8,7 +8,7 @@
         <div class="card-body">
             <div class="row">
                 {% for movie in movies %}
-                    <div class="col-3">
+                    <div class="col-6 col-md-4 col-lg-3">
                         <div class="card mb-2">
                             <a href="{% url 'movie_view' pk=movie.id %}">
                                 <img class="card-img-top img-thumbnail rounded" src="{{ movie.image.url }}"
