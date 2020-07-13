@@ -73,26 +73,30 @@
                         {% endfor %}
                     </td>
                 </tr>
-                <tr>
-                    <td>премьера</td>
-                    <td>{{ movie.premiere }}</td>
-                </tr>
+                {% if movie.premiere %}
+                    <tr>
+                        <td>премьера</td>
+                        <td>{{ movie.premiere }}</td>
+                    </tr>
+                {% endif %}
                 <tr>
                     <td>продолжительность</td>
                     <td>{{ movie.duration_min }} мин.</td>
                 </tr>
                 <tr>
                     <td>кинопоиск</td>
-                    <td><a href="{{ movie.link_kp }}">тыц</a></td>
+                    <td><a href="{{ movie.link_kp }}">(ссылка)</a></td>
                 </tr>
                 </tbody>
             </table>
         </div>
     </div>
-    <div class="card mb-2">
-        <div class="card-header"><h6>Описание</h6></div>
-        <div class="card-body">{{ movie.description }}</div>
-    </div>
+    {% if movie.description %}
+        <div class="card mb-2">
+            <div class="card-header"><h6>Описание</h6></div>
+            <div class="card-body">{{ movie.description }}</div>
+        </div>
+    {% endif %}
     <div class="card">
         <div class="card-header">Если вам понравился этот фильм, не пропустите:</div>
         <div class="card-body">
