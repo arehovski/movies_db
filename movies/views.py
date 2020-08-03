@@ -193,10 +193,7 @@ def add_to_wish_list(request, pk):
         user.wish_list.add(movie)
         messages.success(request, 'Фильм добавлен в папку "Избранное"')
         referer = request.headers.get("Referer")
-        if referer:
-            return redirect(referer)
-        else:
-            return redirect('/')
+        return redirect(referer)
     else:
         return redirect('login')
 
@@ -210,10 +207,7 @@ def remove_from_wish_list(request, pk):
             user.wish_list.remove(movie)
             messages.warning(request, 'Фильм удален из папки "Избранное"')
         referer = request.headers.get("Referer")
-        if referer:
-            return redirect(referer)
-        else:
-            return redirect('/')
+        return redirect(referer)
     else:
         return redirect('login')
 
