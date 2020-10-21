@@ -79,7 +79,7 @@
                             </div>
                             <div class="col-6 order-2 col-md-2 order-md-3 rating">
                                 <div class="text-right">
-                                    {% if movie in user.wish_list.all %}
+                                    {% if movie in wishlist %}
                                         <a href="{% url 'rm_movie' pk=movie.id %}">
                                             <img src="{% static 'img/Flag Blue.svg' %}" width="25">
                                         </a>

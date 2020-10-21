@@ -31,14 +31,15 @@ def pagination(objects_list, request):
 
 # Create your views here.
 class HomePage(views.View):
-    movies = Movie.objects.all()
+    movies = Movie.objects.all().prefetch_related('country', 'genre')
     template = "base.html"
 
     def get(self, request):
         self.movies = pagination(self.movies, request)
         context = {
             'movies': self.movies,
-            'user': request.user
+            'user': request.user,
+            'wishlist': list(request.user.wish_list.all()) if request.user.is_authenticated else []
         }
         return render(request, self.template, context)
 
@@ -47,7 +48,7 @@ class GenreView(views.View):
     template = "genre.html"
 
     def get_movies(self, query_param):
-        return Movie.objects.filter(genre__genre=query_param)
+        return Movie.objects.filter(genre__genre=query_param).prefetch_related('country', 'genre')
 
     def get(self, request, param):
         movies = self.get_movies(param)
@@ -64,14 +65,14 @@ class YearView(GenreView):
     template = 'year.html'
 
     def get_movies(self, query_param):
-        return Movie.objects.filter(year=query_param)
+        return Movie.objects.filter(year=query_param).prefetch_related('country', 'genre')
 
 
 class CountryView(GenreView):
     template = 'country.html'
 
     def get_movies(self, query_param):
-        return Movie.objects.filter(country__country__exact=query_param)
+        return Movie.objects.filter(country__country__exact=query_param).prefetch_related('country', 'genre')
 
 
 class MovieView(views.View):
@@ -79,7 +80,8 @@ class MovieView(views.View):
 
     def get(self, request, pk):
         movie = get_object_or_404(Movie, pk=pk)
-        similar_movies = Movie.objects.filter(genre__genre=movie.genre.all()[0]).exclude(pk=movie.pk)[:8]
+        similar_movies = Movie.objects.only('id', 'image', 'title').filter(
+            genre__genre=movie.genre.all()[0]).exclude(pk=movie.pk)[:8]
         context = {
             'movie': movie,
             'similar_movies': similar_movies,
@@ -175,7 +177,8 @@ class SearchView(ListView):
         search_vector = SearchVector('title')
         search_query = SearchQuery(query)
         search_vector_trgm = TrigramSimilarity('title', query)
-        return Movie.objects.annotate(search=search_vector).filter(search=search_query) or Movie.objects.annotate(
+        return Movie.objects.prefetch_related('country', 'genre').annotate(search=search_vector).filter(
+            search=search_query) or Movie.objects.prefetch_related('country', 'genre').annotate(
             similarity=search_vector_trgm).filter(similarity__gte=0.2).order_by('-similarity')
 
     def get_context_data(self, **kwargs):
@@ -231,7 +234,7 @@ class WishListView(ListView):
 class FilterView(views.View):
     def get(self, request):
         form = FilterForm()
-        queryset = pagination(Movie.objects.all(), request)
+        queryset = pagination(Movie.objects.all().prefetch_related('country', 'genre'), request)
         query_string = ''
         params = {}
         if request.GET:
@@ -239,12 +242,15 @@ class FilterView(views.View):
             if form.is_valid():
                 genre = form.cleaned_data['genre']
                 genre_object_list = Movie.objects.filter(genre__genre=genre) if genre else Movie.objects.all()
+                genre_object_list = genre_object_list.prefetch_related('country', 'genre')
                 country = form.cleaned_data['country']
                 country_object_list = Movie.objects.filter(country__country=country) if country \
                     else Movie.objects.all()
+                country_object_list = country_object_list.prefetch_related('country', 'genre')
                 year = form.cleaned_data['year']
                 year = int(year) if year else None
                 year_object_list = Movie.objects.filter(year=year) if year else Movie.objects.all()
+                year_object_list = year_object_list.prefetch_related('country', 'genre')
                 queryset = pagination(genre_object_list.intersection(country_object_list).intersection(
                     year_object_list).order_by('-rating_kp'), request)
                 query_params = {k: v for k, v in request.GET.items() if k != 'page'}
